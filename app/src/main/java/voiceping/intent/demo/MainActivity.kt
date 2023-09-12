@@ -3,16 +3,23 @@ package voiceping.intent.demo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import voiceping.intent.demo.ui.theme.VoicepingIntentDemoTheme
 
 class MainActivity : ComponentActivity() {
+    val viewModel = MainActivityViewModel()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -22,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    MainScreen(viewModel = viewModel)
                 }
             }
         }
@@ -30,17 +37,40 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun StartPTT(startPTT:() -> Unit) {
+    Button(onClick = {
+        startPTT.invoke()
+    }) {
+        Text(text = "Start PTT")
+    }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    VoicepingIntentDemoTheme {
-        Greeting("Android")
+fun StopPTT(stopPTT:() -> Unit) {
+    Button(onClick = {
+        stopPTT.invoke()
+    }) {
+        Text(text = "Stop PTT")
     }
+}
+
+@Preview()
+@Composable
+fun MainScreen(
+    @PreviewParameter(MainActivityViewModelPreviewParameterProvider::class)  viewModel: MainActivityViewModel) {
+    val context = LocalContext.current.applicationContext
+    Column {
+        StartPTT {
+            viewModel.startPTT(context)
+        }
+        StopPTT {
+            viewModel.stopPTT(context)
+        }
+    }
+}
+
+class MainActivityViewModelPreviewParameterProvider : PreviewParameterProvider<MainActivityViewModel> {
+    override val values = sequenceOf(
+        MainActivityViewModel()
+    )
 }
