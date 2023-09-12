@@ -19,9 +19,11 @@ class MainActivityViewModel {
      * @channelType: 0 --> Group. 1 --> Private
      * @channelId: Id of the channel. To see the id, login to https://voiceoverping.net/ as company admin, and then find the desired channel
      */
-    fun startPTT(channelType:  Int, channelId: Int, context: Context) {
+    fun startPTT(channelId: Int, channelType: Int, context: Context) {
         getIntent().run {
-            action = "android.intent.action"
+            action = "android.intent.action.PTT.down"
+            putExtra("channel_id", channelId)
+            putExtra("channel_type", channelType)
             context.sendBroadcast(this)
         }
     }
