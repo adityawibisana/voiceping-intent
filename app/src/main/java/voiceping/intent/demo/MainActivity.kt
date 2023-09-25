@@ -30,7 +30,9 @@ class MainActivity : ComponentActivity() {
             VoicepingIntentDemoTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize().padding(12.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(12.dp),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MainScreen(viewModel = viewModel)
@@ -41,24 +43,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun StartPTT(startPTT:() -> Unit) {
+fun ActionButton(text: String, startPTT:() -> Unit) {
     Button(
         modifier = Modifier.fillMaxWidth(),
         onClick = {
         startPTT.invoke()
     }) {
-        Text(text = "Start PTT")
-    }
-}
-
-@Composable
-fun StopPTT(stopPTT:() -> Unit) {
-    Button(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = {
-        stopPTT.invoke()
-    }) {
-        Text(text = "Stop PTT")
+        Text(text = text)
     }
 }
 
@@ -69,10 +60,10 @@ fun MainScreen(
     val context = LocalContext.current.applicationContext
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(Modifier.weight(1f))
-        StartPTT {
+        ActionButton(text = "Start PTT") {
             viewModel.startPTT(context)
         }
-        StopPTT {
+        ActionButton(text = "Stop PTT") {
             viewModel.stopPTT(context)
         }
     }
