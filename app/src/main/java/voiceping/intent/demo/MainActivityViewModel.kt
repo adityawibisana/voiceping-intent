@@ -5,6 +5,10 @@ import android.content.Intent
 
 class MainActivityViewModel {
 
+    fun login(username: String, password: String) {
+
+    }
+
     /**
      * Send PTT to the last heard message / last sent PTT
      */
@@ -26,6 +30,14 @@ class MainActivityViewModel {
             putExtra("channel_type", channelType)
             context.sendBroadcast(this)
         }
+    }
+
+    fun goToNextChannel() {
+
+    }
+
+    fun goToPrevChannel() {
+
     }
 
     fun stopPTT(context: Context) {
