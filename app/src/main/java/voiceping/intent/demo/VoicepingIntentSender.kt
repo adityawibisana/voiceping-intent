@@ -46,6 +46,16 @@ class VoicepingIntentSender {
         }
     }
 
+    fun searchChannel(context: Context, channelName: String) {
+        Intent().run {
+            setPackage("com.media2359.voiceping.store")
+            action = "android.led.ptt.select_channel"
+            putExtra("name", channelName)
+            putExtra("SenderPackageName", "your.apps.package.name")
+            context.sendBroadcast(this)
+        }
+    }
+
     fun stopPTT(context: Context) {
         getIntent().run {
             action = "android.intent.action.PTT.up"
