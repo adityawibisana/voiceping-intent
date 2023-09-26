@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -58,13 +57,13 @@ fun ActionButtonPreview() {
 }
 
 @Composable
-fun ActionButton(text: String, startPTT:() -> Unit) {
+fun ActionButton(text: String, action:() -> Unit) {
     Button(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp),
         onClick = {
-            startPTT.invoke()
+            action.invoke()
         }) {
         Text(text = text)
     }
