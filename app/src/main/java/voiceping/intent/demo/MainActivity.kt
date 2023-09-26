@@ -35,7 +35,7 @@ import voiceping.intent.demo.ui.theme.codeFontStyle
 
 
 class MainActivity : ComponentActivity() {
-    private val viewModel = MainActivityViewModel()
+    private val intentSender = VoicepingIntentSender()
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen(viewModel = viewModel)
+                    MainScreen(intentSender = intentSender)
                 }
             }
         }
@@ -85,7 +85,7 @@ fun CodeText(code: String, context: Context) {
 @Preview
 @Composable
 fun MainScreen(
-    @PreviewParameter(MainActivityViewModelPreviewParameterProvider::class)  viewModel: MainActivityViewModel) {
+    @PreviewParameter(MainActivityViewModelPreviewParameterProvider::class)  intentSender: VoicepingIntentSender) {
     val context = LocalContext.current.applicationContext
     Column(modifier = Modifier.fillMaxSize()) {
         var code by remember { mutableStateOf("Press button to get the source code") }
@@ -93,7 +93,7 @@ fun MainScreen(
         CodeText(code, context = context)
         Spacer(Modifier.weight(1f))
         ActionButton(text = "Start PTT") {
-            viewModel.startPTT(context)
+            intentSender.startPTT(context)
             code = """
                 Intent().run { 
                 setPackage("com.media2359.voiceping.store")
@@ -103,7 +103,7 @@ fun MainScreen(
             """
         }
         ActionButton(text = "Stop PTT") {
-            viewModel.stopPTT(context)
+            intentSender.stopPTT(context)
             code = """
                 Intent().run { 
                 setPackage("com.media2359.voiceping.store")
@@ -115,8 +115,8 @@ fun MainScreen(
     }
 }
 
-class MainActivityViewModelPreviewParameterProvider : PreviewParameterProvider<MainActivityViewModel> {
+class MainActivityViewModelPreviewParameterProvider : PreviewParameterProvider<VoicepingIntentSender> {
     override val values = sequenceOf(
-        MainActivityViewModel()
+        VoicepingIntentSender()
     )
 }

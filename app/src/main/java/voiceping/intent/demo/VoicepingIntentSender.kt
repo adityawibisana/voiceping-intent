@@ -3,7 +3,7 @@ package voiceping.intent.demo
 import android.content.Context
 import android.content.Intent
 
-class MainActivityViewModel {
+class VoicepingIntentSender {
 
     fun login(username: String, password: String) {
 
