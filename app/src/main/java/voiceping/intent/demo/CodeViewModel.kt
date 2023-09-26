@@ -21,5 +21,19 @@ class CodeViewModel {
                 context.sendBroadcast(this)
             }
         """
+
+        const val NEXT_CHANNEL_CODE = """
+            Intent().run {
+                action = "android.intent.action.CHANNELDOWN.up"
+                context.sendBroadcast(this)
+            }
+        """
+
+        const val PREV_CHANNEL_CODE = """
+            Intent().run {
+                action = "android.intent.action.CHANNELUP.up"
+                context.sendBroadcast(this)
+            }
+        """
     }
 }
