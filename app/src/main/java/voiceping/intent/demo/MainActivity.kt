@@ -20,23 +20,17 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.asStateFlow
 import voiceping.intent.demo.ui.theme.VoicepingIntentDemoTheme
 import voiceping.intent.demo.ui.theme.codeFontStyle
 
 
 class MainActivity : ComponentActivity() {
-    private val intentSender = VoicepingIntentSender()
-    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -47,7 +41,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen(intentSender = intentSender)
+                    MainScreen(intentSender = VoicepingIntentSender(), CodeViewModel())
                 }
             }
         }
@@ -73,50 +67,53 @@ fun CodeText(code: String, context: Context) {
     Column {
         Text(
             text = "Code:",
-            modifier = Modifier.padding(12.dp).clickable {
-                val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager?
-                val clip = ClipData.newPlainText("source code", code)
-                clipboard!!.setPrimaryClip(clip)
-            })
+            modifier = Modifier
+                .padding(12.dp)
+                .clickable {
+                    val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager?
+                    val clip = ClipData.newPlainText("source code", code)
+                    clipboard!!.setPrimaryClip(clip)
+                })
         TextField(value = code.trimIndent(), onValueChange = {}, textStyle = codeFontStyle, readOnly = true)
         }
 }
 
 @Preview
 @Composable
+fun MainScreenPreview() {
+    MainScreen(intentSender = VoicepingIntentSender(), codeViewModel = CodeViewModel())
+}
+
+@Composable
 fun MainScreen(
-    @PreviewParameter(MainActivityViewModelPreviewParameterProvider::class)  intentSender: VoicepingIntentSender) {
+    intentSender: VoicepingIntentSender,
+    codeViewModel: CodeViewModel,
+    ) {
     val context = LocalContext.current.applicationContext
     Column(modifier = Modifier.fillMaxSize()) {
-        var code by remember { mutableStateOf("Press button to get the source code") }
+        val code = codeViewModel.code.asStateFlow()
 
-        CodeText(code, context = context)
+        CodeText(code.collectAsState().value, context = context)
         Spacer(Modifier.weight(1f))
         ActionButton(text = "Start PTT") {
             intentSender.startPTT(context)
-            code = """
+            codeViewModel.code.tryEmit("""
                 Intent().run { 
                 setPackage("com.media2359.voiceping.store")
                 action = "android.intent.action.PTT.down"
                 context.sendBroadcast(this)
             }
-            """
+            """)
         }
         ActionButton(text = "Stop PTT") {
             intentSender.stopPTT(context)
-            code = """
-                Intent().run { 
+            codeViewModel.code.tryEmit("""
+                Intent().run {
                 setPackage("com.media2359.voiceping.store")
                 action = "android.intent.action.PTT.up"
                 context.sendBroadcast(this)
             }
-            """
+            """)
         }
     }
-}
-
-class MainActivityViewModelPreviewParameterProvider : PreviewParameterProvider<VoicepingIntentSender> {
-    override val values = sequenceOf(
-        VoicepingIntentSender()
-    )
 }
