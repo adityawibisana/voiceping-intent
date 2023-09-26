@@ -32,12 +32,18 @@ class VoicepingIntentSender {
         }
     }
 
-    fun goToNextChannel() {
-
+    fun goToNextChannel(context: Context) {
+        getIntent().run {
+            action = "android.intent.action.CHANNELDOWN.up"
+            context.sendBroadcast(this)
+        }
     }
 
-    fun goToPrevChannel() {
-
+    fun goToPrevChannel(context: Context) {
+        getIntent().run {
+            action =  "android.intent.action.CHANNELUP.up"
+            context.sendBroadcast(this)
+        }
     }
 
     fun stopPTT(context: Context) {

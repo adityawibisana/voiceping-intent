@@ -23,7 +23,7 @@ fun MainScreen(navController: NavController) {
             navController.navigate(route = Route.START_STOP_PTT_SCREEN)
         }
         ActionButton(text = "Go To Channel Screen") {
-            
+            navController.navigate(route = Route.CHANNEL_SCREEN)
         }
     }
 }

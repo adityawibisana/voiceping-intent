@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import voiceping.intent.demo.screen.ChannelScreen
 import voiceping.intent.demo.screen.MainScreen
 import voiceping.intent.demo.screen.Route
 import voiceping.intent.demo.screen.StartStopPTTScreen
@@ -34,6 +35,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Route.START_STOP_PTT_SCREEN) {
                             StartStopPTTScreen(intentSender = VoicepingIntentSender(), codeViewModel = CodeViewModel())
+                        }
+                        composable(Route.CHANNEL_SCREEN) {
+                            ChannelScreen(intentSender = VoicepingIntentSender(), codeViewModel = CodeViewModel())
                         }
                     }
                 }
