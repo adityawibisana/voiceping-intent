@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -64,18 +66,25 @@ fun ActionButton(text: String, startPTT:() -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CodeText(code: String, context: Context) {
+    val copyCode = {
+        val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager?
+        val clip = ClipData.newPlainText("source code", code)
+        clipboard!!.setPrimaryClip(clip)
+    }
+
     Column {
         Text(
             text = "Code:",
             modifier = Modifier
-                .padding(12.dp)
-                .clickable {
-                    val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager?
-                    val clip = ClipData.newPlainText("source code", code)
-                    clipboard!!.setPrimaryClip(clip)
-                })
+                .padding(12.dp))
         TextField(value = code.trimIndent(), onValueChange = {}, textStyle = codeFontStyle, readOnly = true)
+        Row {
+            Spacer(modifier = Modifier.weight(1f))
+            TextButton(onClick = copyCode) {
+                Text(text = "Copy", modifier = Modifier.padding(12.dp))
+            }
         }
+    }
 }
 
 @Preview
