@@ -7,6 +7,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import voiceping.intent.demo.screen.MainScreen
+import voiceping.intent.demo.screen.Route
 import voiceping.intent.demo.screen.StartStopPTTScreen
 import voiceping.intent.demo.ui.theme.VoicepingIntentDemoTheme
 
@@ -22,7 +27,15 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    StartStopPTTScreen(intentSender = VoicepingIntentSender(), CodeViewModel())
+                    val navController = rememberNavController()
+                    NavHost(navController, startDestination = Route.MAIN_SCREEN) {
+                        composable(Route.MAIN_SCREEN) {
+                            MainScreen(navController)
+                        }
+                        composable(Route.START_STOP_PTT_SCREEN) {
+                            StartStopPTTScreen(intentSender = VoicepingIntentSender(), codeViewModel = CodeViewModel())
+                        }
+                    }
                 }
             }
         }
