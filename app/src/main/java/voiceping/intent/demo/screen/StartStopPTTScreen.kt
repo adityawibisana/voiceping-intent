@@ -33,23 +33,11 @@ fun StartStopPTTScreen(
         Spacer(Modifier.weight(1f))
         ActionButton(text = "Start PTT") {
             intentSender.startPTT(context)
-            codeViewModel.code.tryEmit("""
-                Intent().run { 
-                setPackage("com.media2359.voiceping.store")
-                action = "android.intent.action.PTT.down"
-                context.sendBroadcast(this)
-            }
-            """)
+            codeViewModel.code.tryEmit(CodeViewModel.START_PTT_CODE.trim())
         }
         ActionButton(text = "Stop PTT") {
             intentSender.stopPTT(context)
-            codeViewModel.code.tryEmit("""
-                Intent().run {
-                setPackage("com.media2359.voiceping.store")
-                action = "android.intent.action.PTT.up"
-                context.sendBroadcast(this)
-            }
-            """)
+            codeViewModel.code.tryEmit(CodeViewModel.STOP_PTT_CODE.trim())
         }
     }
 }
