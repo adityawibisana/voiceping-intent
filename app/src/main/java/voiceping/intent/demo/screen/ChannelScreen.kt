@@ -51,6 +51,7 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
             },
             label = { Text(text = "Type to search a channel") },
             placeholder = { Text(text = "Type anything, eg: 'channel1'") },
+            maxLines = 1,
             modifier = Modifier.absolutePadding(12.dp, 0.dp, 0.dp, 12.dp)
         )
 

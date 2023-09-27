@@ -14,7 +14,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,6 +41,7 @@ fun LoginScreenPreview()  {
 fun LoginScreen(intentSender: VoicepingIntentSender, codeViewModel: CodeViewModel) {
     val context = LocalContext.current.applicationContext
     val code = codeViewModel.code.asStateFlow()
+    val focusManager = LocalFocusManager.current
 
     Column {
         CodeText(code = code.collectAsState().value, context = context)
@@ -53,9 +61,21 @@ fun LoginScreen(intentSender: VoicepingIntentSender, codeViewModel: CodeViewMode
             },
             label = { Text(text = "Enter your username") },
             placeholder = { Text(text = "Username") },
+            maxLines = 1,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp)
+                .onPreviewKeyEvent {
+                    when {
+                        KeyEventType.KeyUp == it.type &&
+                                (Key.Tab == it.key || Key.DirectionDown ==  it.key) -> {
+                            focusManager.moveFocus(FocusDirection.Next)
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
         )
 
         TextField(
@@ -66,9 +86,24 @@ fun LoginScreen(intentSender: VoicepingIntentSender, codeViewModel: CodeViewMode
             },
             label = { Text(text = "Enter your password") },
             placeholder = { Text(text = "Password") },
+            maxLines = 1,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp)
+                .onPreviewKeyEvent {
+                    when {
+                        KeyEventType.KeyUp == it.type && Key.Enter == it.key -> {
+                            intentSender.login(context, username, password)
+                            true
+                        }
+                        KeyEventType.KeyUp == it.type && Key.DirectionUp == it.key -> {
+                            focusManager.moveFocus(FocusDirection.Previous)
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
         )
 
         ActionButton(text = "Login") {
