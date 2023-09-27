@@ -3,6 +3,8 @@ package voiceping.intent.demo.view
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,9 +16,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import voiceping.intent.demo.R
+import voiceping.intent.demo.ui.theme.Purple80
+import voiceping.intent.demo.ui.theme.Typography
 import voiceping.intent.demo.ui.theme.codeFontStyle
 
 @Preview
@@ -66,5 +77,48 @@ fun ActionButton(text: String, action:() -> Unit) {
             action.invoke()
         }) {
         Text(text = text)
+    }
+}
+
+@Preview
+@Composable
+fun StepPreview() {
+    Step("Install Voiceping", true, null)
+}
+
+@Preview
+@Composable
+fun StepNotDonePreview() {
+    Step("Install Voiceping", false) {
+
+    }
+}
+
+@Composable
+fun Step(text: String, done: Boolean, action: (() -> Unit)?) {
+    val rowModifier = Modifier
+        .padding(12.dp)
+
+    var spanStyle = SpanStyle()
+    if (action != null && !done) {
+        rowModifier.clickable {
+            action.invoke()
+        }
+        spanStyle = SpanStyle(Purple80)
+    }
+
+    Row(rowModifier) {
+        Text(buildAnnotatedString {
+            withStyle(style = spanStyle) {
+                append(text)
+            }
+        })
+        Spacer(modifier = Modifier.weight(1.0f))
+        if (done) {
+            Image(
+                painter = painterResource(id = R.drawable.baseline_check_circle_24),
+                contentDescription = "Check"
+            )
+        }
     }
 }
