@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import voiceping.intent.demo.screen.ChannelScreen
+import voiceping.intent.demo.screen.LoginScreen
 import voiceping.intent.demo.screen.MainScreen
 import voiceping.intent.demo.screen.Route
 import voiceping.intent.demo.screen.StartStopPTTScreen
@@ -20,6 +21,8 @@ import voiceping.intent.demo.ui.theme.VoicepingIntentDemoTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val intentSender = VoicepingIntentSender()
+
         setContent {
             VoicepingIntentDemoTheme {
                 // A surface container using the 'background' color from the theme
@@ -34,10 +37,13 @@ class MainActivity : ComponentActivity() {
                             MainScreen(navController)
                         }
                         composable(Route.START_STOP_PTT_SCREEN) {
-                            StartStopPTTScreen(intentSender = VoicepingIntentSender(), codeViewModel = CodeViewModel())
+                            StartStopPTTScreen(intentSender = intentSender, codeViewModel = CodeViewModel())
                         }
                         composable(Route.CHANNEL_SCREEN) {
-                            ChannelScreen(intentSender = VoicepingIntentSender(), codeViewModel = CodeViewModel())
+                            ChannelScreen(intentSender = intentSender, codeViewModel = CodeViewModel())
+                        }
+                        composable(Route.LOGIN_SCREEN) {
+                            LoginScreen(intentSender = intentSender, codeViewModel = CodeViewModel())
                         }
                     }
                 }

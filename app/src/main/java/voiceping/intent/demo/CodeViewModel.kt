@@ -19,6 +19,20 @@ class CodeViewModel {
         """.trimIndent()
     }
 
+    fun getLoginIntentCode(username: String, password: String) : String {
+        return """
+        fun login(context: Context, username: String, password: String) {
+            Intent().run {
+                setPackage("com.media2359.voiceping.store")
+                action = "login"
+                putExtra("username", "$username")
+                putExtra("password", "$password")
+                context.sendBroadcast(this)
+            }
+        }
+        """.trimIndent()
+    }
+
     companion object {
         const val START_PTT_CODE = """
             Intent().run { 

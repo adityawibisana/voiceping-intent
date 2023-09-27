@@ -5,8 +5,13 @@ import android.content.Intent
 
 class VoicepingIntentSender {
 
-    fun login(username: String, password: String) {
-
+    fun login(context: Context, username: String, password: String) {
+        getIntent().run {
+            action = "login"
+            putExtra("username", username)
+            putExtra("password", password)
+            context.sendBroadcast(this)
+        }
     }
 
     /**

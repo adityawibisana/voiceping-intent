@@ -17,7 +17,7 @@ fun PreviewMainScreen() {
 fun MainScreen(navController: NavController) {
     Column {
         ActionButton(text = "Go To Login Screen") {
-
+            navController.navigate(route = Route.LOGIN_SCREEN)
         }
         ActionButton(text = "Go To PTT Screen") {
             navController.navigate(route = Route.START_STOP_PTT_SCREEN)
