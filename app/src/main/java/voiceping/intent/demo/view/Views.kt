@@ -96,18 +96,18 @@ fun StepNotDonePreview() {
 
 @Composable
 fun Step(text: String, done: Boolean, action: (() -> Unit)?) {
-    val rowModifier = Modifier
-        .padding(12.dp)
-
     var spanStyle = SpanStyle()
     if (action != null && !done) {
-        rowModifier.clickable {
-            action.invoke()
-        }
         spanStyle = SpanStyle(Purple80)
     }
 
-    Row(rowModifier) {
+    Row(Modifier
+        .clickable {
+            if (!done) {
+                action?.invoke()
+            }
+        }.padding(12.dp)
+    ) {
         Text(buildAnnotatedString {
             withStyle(style = spanStyle) {
                 append(text)

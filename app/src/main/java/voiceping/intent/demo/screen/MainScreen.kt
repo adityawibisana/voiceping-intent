@@ -4,29 +4,44 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import voiceping.intent.demo.Step
+import voiceping.intent.demo.StepInstallVoiceping
 import voiceping.intent.demo.ui.theme.Typography
 import voiceping.intent.demo.view.ActionButton
+import voiceping.intent.demo.view.Step
 
 @Preview
 @Composable
 fun PreviewMainScreen() {
-    MainScreen(navController = NavController(LocalContext.current))
+    MainScreen(navController = NavController(LocalContext.current), StepInstallVoiceping())
 }
 
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen(navController: NavController,
+               stepInstallVoiceping: Step
+) {
+    val context = LocalContext.current.applicationContext
+
     Column {
-        Text("Use Voiceping within your app! No additional library is required. Here are the steps that you need to follow:",
+        Text("Use Voiceping within your app! No additional library is required",
             style = Typography.bodyLarge,
             modifier = Modifier
                 .weight(1.0f)
                 .padding(12.dp)
         )
+
+        Column(modifier = Modifier.weight(1.0f).padding(12.dp)) {
+            Text(text = "Here are the steps that you need to follow:")
+            Step(text = "Install Voiceping", done = stepInstallVoiceping.done.collectAsState().value) {
+                stepInstallVoiceping.action.invoke(context)
+            }
+        }
 
         ActionButton(text = "Go To Login Screen") {
             navController.navigate(route = Route.LOGIN_SCREEN)

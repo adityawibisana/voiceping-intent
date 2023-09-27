@@ -19,6 +19,8 @@ import voiceping.intent.demo.ui.theme.VoicepingIntentDemoTheme
 
 
 class MainActivity : ComponentActivity() {
+    private val stepInstallVoiceping = StepInstallVoiceping()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val intentSender = VoicepingIntentSender()
@@ -34,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(navController, startDestination = Route.MAIN_SCREEN) {
                         composable(Route.MAIN_SCREEN) {
-                            MainScreen(navController)
+                            MainScreen(navController, stepInstallVoiceping)
                         }
                         composable(Route.START_STOP_PTT_SCREEN) {
                             StartStopPTTScreen(intentSender = intentSender, codeViewModel = CodeViewModel())
@@ -49,5 +51,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onPostResume() {
+        super.onPostResume()
+        stepInstallVoiceping.reloadDoneStatus(context = this)
     }
 }
