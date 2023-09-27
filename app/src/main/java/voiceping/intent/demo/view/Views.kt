@@ -35,7 +35,7 @@ fun CodeText(code: String, context: Context) {
 
     Column {
         Text(
-            text = "Code:",
+            text = "The only code that you need:",
             modifier = Modifier
                 .padding(12.dp))
         BasicTextField(value = code.trimIndent(), onValueChange = {}, textStyle = codeFontStyle, readOnly = true)
