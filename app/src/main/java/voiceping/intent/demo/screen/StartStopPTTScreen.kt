@@ -3,11 +3,13 @@ package voiceping.intent.demo.screen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.asStateFlow
 import voiceping.intent.demo.CodeViewModel
 import voiceping.intent.demo.VoicepingIntentSender
@@ -26,7 +28,7 @@ fun StartStopPTTScreen(
     codeViewModel: CodeViewModel,
 ) {
     val context = LocalContext.current.applicationContext
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.padding(12.dp)) {
         val code = codeViewModel.code.asStateFlow()
 
         CodeText(code.collectAsState().value, context = context)

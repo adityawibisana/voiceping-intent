@@ -41,7 +41,7 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
     val code = codeViewModel.code.asStateFlow()
     var searchResult by remember { mutableStateOf("") }
 
-    Column {
+    Column(modifier = Modifier.padding(12.dp)) {
         CodeText(code = code.collectAsState().value, context = context)
         Spacer(modifier = Modifier.weight(1.0f))
 
@@ -62,8 +62,9 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
             maxLines = 1,
             modifier = Modifier
                 .fillMaxWidth()
-                .absolutePadding(12.dp, 0.dp, 12.dp, 12.dp)
         )
+
+        Spacer(modifier = Modifier.padding(12.dp))
 
         ActionButton(text = "Prev Channel") {
             intentSender.goToPrevChannel(context)
@@ -73,6 +74,5 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
             intentSender.goToNextChannel(context)
             codeViewModel.code.tryEmit(CodeViewModel.NEXT_CHANNEL_CODE)
         }
-        Spacer(modifier = Modifier.height(12.dp))
     }
 }

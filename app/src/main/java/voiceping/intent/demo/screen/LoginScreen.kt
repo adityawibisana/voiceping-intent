@@ -54,7 +54,7 @@ fun LoginScreen(
 
     intentSender.getCurrentUser(context = context)
 
-    Column {
+    Column(modifier = Modifier.padding(12.dp)) {
         CodeText(code = code.collectAsState().value, context = context)
         Spacer(modifier = Modifier.weight(1.0f))
 
@@ -123,6 +123,8 @@ fun LoginScreen(
                     }
                 }
         )
+
+        Spacer (modifier = Modifier.padding(6.dp))
 
         ActionButton(text = "Login") {
             intentSender.login(

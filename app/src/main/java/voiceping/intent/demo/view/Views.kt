@@ -71,8 +71,7 @@ fun ActionButtonPreview() {
 fun ActionButton(text: String, action:() -> Unit) {
     Button(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 12.dp),
+            .fillMaxWidth(),
         onClick = {
             action.invoke()
         }) {

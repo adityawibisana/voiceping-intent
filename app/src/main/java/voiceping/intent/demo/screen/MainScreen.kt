@@ -1,6 +1,7 @@
 package voiceping.intent.demo.screen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +29,7 @@ fun MainScreen(navController: NavController,
 ) {
     val context = LocalContext.current.applicationContext
 
-    Column {
+    Column(modifier = Modifier.padding(12.dp)) {
         Text("Use Voiceping within your app! No additional library is required",
             style = Typography.bodyLarge,
             modifier = Modifier
