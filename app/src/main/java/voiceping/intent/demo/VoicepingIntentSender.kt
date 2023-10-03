@@ -68,6 +68,13 @@ class VoicepingIntentSender {
         }
     }
 
+    fun getCurrentUser(context: Context) {
+        getIntent().run {
+            action = "com.voiceping.store.get_user"
+            context.sendBroadcast(this)
+        }
+    }
+
 
     private fun getIntent() = Intent().apply {
         setPackage("com.media2359.voiceping.store")

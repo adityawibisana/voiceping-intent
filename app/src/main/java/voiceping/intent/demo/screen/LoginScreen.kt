@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,21 +28,31 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.asStateFlow
 import voiceping.intent.demo.CodeViewModel
 import voiceping.intent.demo.VoicepingIntentSender
+import voiceping.intent.demo.receivers.SyncFinishedReceiver
 import voiceping.intent.demo.view.ActionButton
 import voiceping.intent.demo.view.CodeText
 
 @Preview
 @Composable
 fun LoginScreenPreview()  {
-    LoginScreen(intentSender = VoicepingIntentSender(), codeViewModel = CodeViewModel())
+    LoginScreen(intentSender = VoicepingIntentSender(),
+        codeViewModel = CodeViewModel(),
+        syncFinishedReceiver = SyncFinishedReceiver()
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(intentSender: VoicepingIntentSender, codeViewModel: CodeViewModel) {
+fun LoginScreen(
+    intentSender: VoicepingIntentSender,
+    codeViewModel: CodeViewModel,
+    syncFinishedReceiver: SyncFinishedReceiver
+) {
     val context = LocalContext.current.applicationContext
     val code = codeViewModel.code.asStateFlow()
     val focusManager = LocalFocusManager.current
+
+    intentSender.getCurrentUser(context = context)
 
     Column {
         CodeText(code = code.collectAsState().value, context = context)
@@ -51,6 +62,12 @@ fun LoginScreen(intentSender: VoicepingIntentSender, codeViewModel: CodeViewMode
         var password by remember { mutableStateOf("") }
         val updateCode = {
             codeViewModel.code.tryEmit(codeViewModel.getLoginIntentCode(username, password))
+        }
+
+        TextButton(onClick = {
+            codeViewModel.code.tryEmit(CodeViewModel.RECEIVE_USER)
+        }) {
+            Text(text = "User: ${syncFinishedReceiver.usernameStateFlow.collectAsState().value}")
         }
 
         OutlinedTextField(

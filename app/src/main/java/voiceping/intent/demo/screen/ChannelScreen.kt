@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -42,6 +44,11 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
     Column {
         CodeText(code = code.collectAsState().value, context = context)
         Spacer(modifier = Modifier.weight(1.0f))
+
+        TextButton(onClick = { }) {
+            Text(text = "Current channel: ")
+            Text(text = "Is", )
+        }
 
         OutlinedTextField(
             value = searchResult,

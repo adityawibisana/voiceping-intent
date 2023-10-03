@@ -30,6 +30,8 @@ class CodeViewModel {
                 context.sendBroadcast(this)
             }
         }
+        
+        // OPTIONAL. This is the code to get Voiceping's feedback
         """.trimIndent()
     }
 
@@ -64,6 +66,18 @@ class CodeViewModel {
                 action = "android.intent.action.CHANNELUP.up"
                 context.sendBroadcast(this)
             }
+        """
+
+        const val RECEIVE_USER = """
+        // on your app's context:
+        val intentFilter = IntentFilter().apply {
+            addAction("com.voiceping.store.sync_finished")
+            addAction("com.voiceping.store.user")
+        }
+        context.registerReceiver(yourReceiverInstance, intentFilter)
+        
+        // on yourReceiver's class:
+        val username = intent.getStringExtra("username")
         """
     }
 }

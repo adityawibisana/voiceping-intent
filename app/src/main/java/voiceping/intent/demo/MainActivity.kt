@@ -1,5 +1,7 @@
 package voiceping.intent.demo
 
+import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import voiceping.intent.demo.receivers.SyncFinishedReceiver
 import voiceping.intent.demo.screen.ChannelScreen
 import voiceping.intent.demo.screen.LoginScreen
 import voiceping.intent.demo.screen.MainScreen
@@ -20,10 +23,23 @@ import voiceping.intent.demo.ui.theme.VoicepingIntentDemoTheme
 
 class MainActivity : ComponentActivity() {
     private val stepInstallVoiceping = StepInstallVoiceping()
+    val syncFinishedReceiver = SyncFinishedReceiver()
 
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val intentSender = VoicepingIntentSender()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(
+                syncFinishedReceiver,
+                syncFinishedReceiver.intentFilter,
+                RECEIVER_EXPORTED
+            )
+        } else {
+            registerReceiver(syncFinishedReceiver, syncFinishedReceiver.intentFilter)
+        }
 
         setContent {
             VoicepingIntentDemoTheme {
@@ -45,7 +61,9 @@ class MainActivity : ComponentActivity() {
                             ChannelScreen(intentSender = intentSender, codeViewModel = CodeViewModel())
                         }
                         composable(Route.LOGIN_SCREEN) {
-                            LoginScreen(intentSender = intentSender, codeViewModel = CodeViewModel())
+                            LoginScreen(intentSender = intentSender,
+                                codeViewModel = CodeViewModel(),
+                                syncFinishedReceiver = syncFinishedReceiver)
                         }
                     }
                 }
