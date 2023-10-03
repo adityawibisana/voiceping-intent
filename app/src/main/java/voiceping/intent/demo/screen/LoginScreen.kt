@@ -81,7 +81,6 @@ fun LoginScreen(
             maxLines = 1,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)
                 .onPreviewKeyEvent {
                     when {
                         KeyEventType.KeyUp == it.type &&
@@ -94,7 +93,7 @@ fun LoginScreen(
                     }
                 }
         )
-
+        Spacer(modifier = Modifier.padding(3.dp))
         OutlinedTextField(
             value = password,
             onValueChange = {
@@ -106,7 +105,6 @@ fun LoginScreen(
             maxLines = 1,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)
                 .onPreviewKeyEvent {
                     when {
                         KeyEventType.KeyUp == it.type && Key.Enter == it.key -> {
@@ -123,9 +121,7 @@ fun LoginScreen(
                     }
                 }
         )
-
-        Spacer (modifier = Modifier.padding(6.dp))
-
+        Spacer(modifier = Modifier.padding(3.dp))
         ActionButton(text = "Login") {
             intentSender.login(
                 context = context,
