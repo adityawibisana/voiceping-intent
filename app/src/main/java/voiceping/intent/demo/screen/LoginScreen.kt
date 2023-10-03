@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -53,7 +53,7 @@ fun LoginScreen(intentSender: VoicepingIntentSender, codeViewModel: CodeViewMode
             codeViewModel.code.tryEmit(codeViewModel.getLoginIntentCode(username, password))
         }
 
-        TextField(
+        OutlinedTextField(
             value = username,
             onValueChange = {
                 username = it
@@ -68,7 +68,7 @@ fun LoginScreen(intentSender: VoicepingIntentSender, codeViewModel: CodeViewMode
                 .onPreviewKeyEvent {
                     when {
                         KeyEventType.KeyUp == it.type &&
-                                (Key.Tab == it.key || Key.DirectionDown ==  it.key) -> {
+                                (Key.Tab == it.key || Key.DirectionDown == it.key) -> {
                             focusManager.moveFocus(FocusDirection.Next)
                             true
                         }
@@ -78,7 +78,7 @@ fun LoginScreen(intentSender: VoicepingIntentSender, codeViewModel: CodeViewMode
                 }
         )
 
-        TextField(
+        OutlinedTextField(
             value = password,
             onValueChange = {
                 password = it
@@ -96,6 +96,7 @@ fun LoginScreen(intentSender: VoicepingIntentSender, codeViewModel: CodeViewMode
                             intentSender.login(context, username, password)
                             true
                         }
+
                         KeyEventType.KeyUp == it.type && Key.DirectionUp == it.key -> {
                             focusManager.moveFocus(FocusDirection.Previous)
                             true

@@ -3,10 +3,11 @@ package voiceping.intent.demo.screen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -42,7 +43,7 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
         CodeText(code = code.collectAsState().value, context = context)
         Spacer(modifier = Modifier.weight(1.0f))
 
-        TextField(
+        OutlinedTextField(
             value = searchResult,
             onValueChange = {
                 searchResult = it
@@ -52,7 +53,9 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
             label = { Text(text = "Type to search a channel") },
             placeholder = { Text(text = "Type anything, eg: 'channel1'") },
             maxLines = 1,
-            modifier = Modifier.absolutePadding(12.dp, 0.dp, 0.dp, 12.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .absolutePadding(12.dp, 0.dp, 12.dp, 12.dp)
         )
 
         ActionButton(text = "Prev Channel") {
