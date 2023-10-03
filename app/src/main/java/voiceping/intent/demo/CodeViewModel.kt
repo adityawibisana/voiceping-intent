@@ -30,8 +30,6 @@ class CodeViewModel {
                 context.sendBroadcast(this)
             }
         }
-        
-        // OPTIONAL. This is the code to get Voiceping's feedback
         """.trimIndent()
     }
 

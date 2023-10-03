@@ -45,11 +45,6 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
         CodeText(code = code.collectAsState().value, context = context)
         Spacer(modifier = Modifier.weight(1.0f))
 
-        TextButton(onClick = { }) {
-            Text(text = "Current channel: ")
-            Text(text = "Is", )
-        }
-
         OutlinedTextField(
             value = searchResult,
             onValueChange = {
