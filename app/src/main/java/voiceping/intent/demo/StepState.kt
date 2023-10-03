@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import voiceping.intent.demo.receivers.SyncFinishedReceiver
 
 interface Step {
     val action: (context: Context) -> Unit
@@ -50,5 +51,23 @@ class StepInstallVoiceping: Step {
         } catch (e: PackageManager.NameNotFoundException) {
             false
         }
+    }
+}
+
+class StepLogin(private val syncFinishedReceiver: SyncFinishedReceiver,
+                override val action: (context: Context) -> Unit,
+) : Step {
+    override val done = MutableStateFlow(false)
+
+    init {
+        CoroutineScope(Job()).launch(Dispatchers.IO) {
+            syncFinishedReceiver.usernameStateFlow.collect() {
+                done.emit(syncFinishedReceiver.usernameStateFlow.value.isNotBlank())
+            }
+        }
+    }
+
+    override fun reloadDoneStatus(context: Context) {
+
     }
 }

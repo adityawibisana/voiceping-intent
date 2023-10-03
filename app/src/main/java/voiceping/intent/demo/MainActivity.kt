@@ -23,8 +23,7 @@ import voiceping.intent.demo.ui.theme.VoicepingIntentDemoTheme
 
 class MainActivity : ComponentActivity() {
     private val stepInstallVoiceping = StepInstallVoiceping()
-    val syncFinishedReceiver = SyncFinishedReceiver()
-
+    private val syncFinishedReceiver = SyncFinishedReceiver()
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +39,8 @@ class MainActivity : ComponentActivity() {
         } else {
             registerReceiver(syncFinishedReceiver, syncFinishedReceiver.intentFilter)
         }
+        // trigger, whether need to login or need
+        intentSender.getCurrentUser(this)
 
         setContent {
             VoicepingIntentDemoTheme {
@@ -50,9 +51,12 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
+
                     NavHost(navController, startDestination = Route.MAIN_SCREEN) {
                         composable(Route.MAIN_SCREEN) {
-                            MainScreen(navController, stepInstallVoiceping)
+                            MainScreen(navController, stepInstallVoiceping, stepLogin = StepLogin(syncFinishedReceiver) {
+                                navController.navigate(Route.LOGIN_SCREEN)
+                            })
                         }
                         composable(Route.START_STOP_PTT_SCREEN) {
                             StartStopPTTScreen(intentSender = intentSender, codeViewModel = CodeViewModel())

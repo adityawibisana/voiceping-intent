@@ -13,6 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import voiceping.intent.demo.Step
 import voiceping.intent.demo.StepInstallVoiceping
+import voiceping.intent.demo.StepLogin
+import voiceping.intent.demo.receivers.SyncFinishedReceiver
 import voiceping.intent.demo.ui.theme.Typography
 import voiceping.intent.demo.view.ActionButton
 import voiceping.intent.demo.view.Step
@@ -20,12 +22,17 @@ import voiceping.intent.demo.view.Step
 @Preview
 @Composable
 fun PreviewMainScreen() {
-    MainScreen(navController = NavController(LocalContext.current), StepInstallVoiceping())
+    MainScreen(navController = NavController(LocalContext.current),
+        StepInstallVoiceping(),
+        StepLogin(SyncFinishedReceiver()) {
+        }
+    )
 }
 
 @Composable
 fun MainScreen(navController: NavController,
-               stepInstallVoiceping: Step
+               stepInstallVoiceping: Step,
+               stepLogin: StepLogin
 ) {
     val context = LocalContext.current.applicationContext
 
@@ -33,16 +40,21 @@ fun MainScreen(navController: NavController,
         Text("Use Voiceping within your app! No additional library is required",
             style = Typography.bodyLarge,
             modifier = Modifier
-                .weight(1.0f)
                 .padding(12.dp)
         )
 
-        Column(modifier = Modifier.weight(1.0f).padding(12.dp)) {
+        Spacer(modifier = Modifier.weight(1.0f))
+        Column(modifier = Modifier
+            .padding(12.dp)) {
             Text(text = "Here are the steps that you need to follow:")
             Step(text = "Install Voiceping", done = stepInstallVoiceping.done.collectAsState().value) {
                 stepInstallVoiceping.action.invoke(context)
             }
+            Step(text = "Login", done = stepLogin.done.collectAsState().value) {
+                stepLogin.action.invoke(context)
+            }
         }
+        Spacer(modifier = Modifier.weight(1.0f))
 
         ActionButton(text = "Go To Login Screen") {
             navController.navigate(route = Route.LOGIN_SCREEN)
