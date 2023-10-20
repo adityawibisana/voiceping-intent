@@ -20,12 +20,13 @@ import voiceping.intent.demo.screen.Route
 import voiceping.intent.demo.screen.StartStopPTTScreen
 import voiceping.intent.demo.steps.StepInstallVoiceping
 import voiceping.intent.demo.steps.StepLogin
+import voiceping.intent.demo.steps.StepOpenVoiceping
 import voiceping.intent.demo.ui.theme.VoicepingIntentDemoTheme
-
 
 class MainActivity : ComponentActivity() {
     private val stepInstallVoiceping = StepInstallVoiceping()
     private val syncFinishedReceiver = SyncFinishedReceiver()
+    private val stepOpenVoiceping = StepOpenVoiceping()
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,9 +57,12 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(navController, startDestination = Route.MAIN_SCREEN) {
                         composable(Route.MAIN_SCREEN) {
-                            MainScreen(navController, stepInstallVoiceping, stepLogin = StepLogin(syncFinishedReceiver) {
+                            MainScreen(navController,
+                                stepInstallVoiceping = stepInstallVoiceping,
+                                stepLogin = StepLogin(syncFinishedReceiver) {
                                 navController.navigate(Route.LOGIN_SCREEN)
-                            })
+                                },
+                                stepOpenVoiceping = stepOpenVoiceping)
                         }
                         composable(Route.START_STOP_PTT_SCREEN) {
                             StartStopPTTScreen(intentSender = intentSender, codeViewModel = CodeViewModel())
@@ -80,5 +84,6 @@ class MainActivity : ComponentActivity() {
     override fun onPostResume() {
         super.onPostResume()
         stepInstallVoiceping.reloadDoneStatus(context = this)
+        stepOpenVoiceping.reloadDoneStatus(this)
     }
 }

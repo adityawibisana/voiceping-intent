@@ -15,6 +15,7 @@ import voiceping.intent.demo.receivers.SyncFinishedReceiver
 import voiceping.intent.demo.steps.Step
 import voiceping.intent.demo.steps.StepInstallVoiceping
 import voiceping.intent.demo.steps.StepLogin
+import voiceping.intent.demo.steps.StepOpenVoiceping
 import voiceping.intent.demo.ui.theme.Typography
 import voiceping.intent.demo.view.ActionButton
 import voiceping.intent.demo.view.Step
@@ -25,14 +26,16 @@ fun PreviewMainScreen() {
     MainScreen(navController = NavController(LocalContext.current),
         StepInstallVoiceping(),
         StepLogin(SyncFinishedReceiver()) {
-        }
+        },
+        StepOpenVoiceping()
     )
 }
 
 @Composable
 fun MainScreen(navController: NavController,
                stepInstallVoiceping: Step,
-               stepLogin: StepLogin
+               stepLogin: Step,
+               stepOpenVoiceping: Step
 ) {
     val context = LocalContext.current.applicationContext
 
@@ -49,6 +52,9 @@ fun MainScreen(navController: NavController,
             Text(text = "Here are the steps that you need to follow:")
             Step(text = "Install Voiceping", done = stepInstallVoiceping.done.collectAsState().value) {
                 stepInstallVoiceping.action.invoke(context)
+            }
+            Step(text = "Open Voiceping", done = stepOpenVoiceping.done.collectAsState().value) {
+                stepOpenVoiceping.action.invoke(context)
             }
             Step(text = "Login", done = stepLogin.done.collectAsState().value) {
                 stepLogin.action.invoke(context)
