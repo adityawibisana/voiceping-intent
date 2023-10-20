@@ -11,10 +11,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import voiceping.intent.demo.Step
-import voiceping.intent.demo.StepInstallVoiceping
-import voiceping.intent.demo.StepLogin
 import voiceping.intent.demo.receivers.SyncFinishedReceiver
+import voiceping.intent.demo.steps.Step
+import voiceping.intent.demo.steps.StepInstallVoiceping
+import voiceping.intent.demo.steps.StepLogin
 import voiceping.intent.demo.ui.theme.Typography
 import voiceping.intent.demo.view.ActionButton
 import voiceping.intent.demo.view.Step

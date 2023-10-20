@@ -1,9 +1,8 @@
-package voiceping.intent.demo
+package voiceping.intent.demo.steps
 
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.PackageManager
 import android.net.Uri
 import kotlinx.coroutines.CoroutineScope
@@ -11,13 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import voiceping.intent.demo.receivers.SyncFinishedReceiver
-
-interface Step {
-    val action: (context: Context) -> Unit
-    val done: MutableStateFlow<Boolean>
-    fun reloadDoneStatus(context: Context)
-}
 
 class StepInstallVoiceping: Step {
     private val packageName = "com.media2359.voiceping.store"
@@ -27,7 +19,7 @@ class StepInstallVoiceping: Step {
         get() = {
             val intent = Intent()
             intent.action = Intent.ACTION_VIEW
-            intent.flags = FLAG_ACTIVITY_NEW_TASK
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
             try {
                 intent.data = Uri.parse("market://details?id=$packageName")
@@ -51,23 +43,5 @@ class StepInstallVoiceping: Step {
         } catch (e: PackageManager.NameNotFoundException) {
             false
         }
-    }
-}
-
-class StepLogin(private val syncFinishedReceiver: SyncFinishedReceiver,
-                override val action: (context: Context) -> Unit,
-) : Step {
-    override val done = MutableStateFlow(false)
-
-    init {
-        CoroutineScope(Job()).launch(Dispatchers.IO) {
-            syncFinishedReceiver.usernameStateFlow.collect() {
-                done.emit(syncFinishedReceiver.usernameStateFlow.value.isNotBlank())
-            }
-        }
-    }
-
-    override fun reloadDoneStatus(context: Context) {
-
     }
 }
