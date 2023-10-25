@@ -11,6 +11,7 @@ import android.os.Build
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -32,9 +33,12 @@ class StepOpenVoiceping : Step {
     // the check is done by simply calling channel name. If Voiceping is not responding, then it means Voiceping is not opened.
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun reloadDoneStatus(context: Context) {
+        val voicepingOpenCheckScope = CoroutineScope(Job())
+
         // add receiver to get the current channel information
         val currentChannelReceiver : BroadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
+                voicepingOpenCheckScope.cancel()
                 done.tryEmit(true)
             }
         }
@@ -52,9 +56,9 @@ class StepOpenVoiceping : Step {
             context.sendBroadcast(this)
         }
 
-        // if within 1 sec no response from voiceping, we will assume that Voiceping is not opened yet.
-        CoroutineScope(Job()).launch(Dispatchers.IO) {
-            delay(1000)
+        // if within 2 secs no response from voiceping, we will assume that Voiceping is not opened yet.
+        voicepingOpenCheckScope.launch(Dispatchers.IO) {
+            delay(2000)
             done.tryEmit(false)
             context.unregisterReceiver(currentChannelReceiver)
         }
