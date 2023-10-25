@@ -2,11 +2,11 @@ package voiceping.intent.demo.steps
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Context.RECEIVER_EXPORTED
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Build
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,14 +16,19 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-
 class StepOpenVoiceping : Step {
     override val action: (context: Context) -> Unit
         get() = {
             try {
-                val intent = it.packageManager.getLaunchIntentForPackage("com.media2359.voiceping.store")
+                val packageName = "com.media2359.voiceping.store"
+                val activityName = "com.media2359.voiceping.FavoriteActivity"
+                val intent = Intent(Intent.ACTION_MAIN)
+                intent.component = ComponentName(packageName, activityName)
+                intent.putExtra("headless", true)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 it.startActivity(intent)
-            } catch (e: NameNotFoundException) {
+            } catch (e: Exception) {
+                val eror = e
                 // TODO: Add warning or something
             }
         }
