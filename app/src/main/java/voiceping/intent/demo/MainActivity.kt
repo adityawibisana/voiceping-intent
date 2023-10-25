@@ -19,7 +19,6 @@ import voiceping.intent.demo.screen.MainScreen
 import voiceping.intent.demo.screen.Route
 import voiceping.intent.demo.screen.StartStopPTTScreen
 import voiceping.intent.demo.steps.StepInstallVoiceping
-import voiceping.intent.demo.steps.StepLogin
 import voiceping.intent.demo.steps.StepOpenVoiceping
 import voiceping.intent.demo.ui.theme.VoicepingIntentDemoTheme
 
@@ -59,9 +58,6 @@ class MainActivity : ComponentActivity() {
                         composable(Route.MAIN_SCREEN) {
                             MainScreen(navController,
                                 stepInstallVoiceping = stepInstallVoiceping,
-                                stepLogin = StepLogin(syncFinishedReceiver) {
-                                navController.navigate(Route.LOGIN_SCREEN)
-                                },
                                 stepOpenVoiceping = stepOpenVoiceping)
                         }
                         composable(Route.START_STOP_PTT_SCREEN) {

@@ -11,10 +11,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import voiceping.intent.demo.receivers.SyncFinishedReceiver
 import voiceping.intent.demo.steps.Step
 import voiceping.intent.demo.steps.StepInstallVoiceping
-import voiceping.intent.demo.steps.StepLogin
 import voiceping.intent.demo.steps.StepOpenVoiceping
 import voiceping.intent.demo.ui.theme.Typography
 import voiceping.intent.demo.view.ActionButton
@@ -25,8 +23,6 @@ import voiceping.intent.demo.view.Step
 fun PreviewMainScreen() {
     MainScreen(navController = NavController(LocalContext.current),
         StepInstallVoiceping(),
-        StepLogin(SyncFinishedReceiver()) {
-        },
         StepOpenVoiceping()
     )
 }
@@ -34,7 +30,6 @@ fun PreviewMainScreen() {
 @Composable
 fun MainScreen(navController: NavController,
                stepInstallVoiceping: Step,
-               stepLogin: Step,
                stepOpenVoiceping: Step
 ) {
     val context = LocalContext.current.applicationContext
@@ -53,11 +48,8 @@ fun MainScreen(navController: NavController,
             Step(text = "Install Voiceping", done = stepInstallVoiceping.done.collectAsState().value) {
                 stepInstallVoiceping.action.invoke(context)
             }
-            Step(text = "Open Voiceping", done = stepOpenVoiceping.done.collectAsState().value) {
+            Step(text = "Open and login to Voiceping", done = stepOpenVoiceping.done.collectAsState().value) {
                 stepOpenVoiceping.action.invoke(context)
-            }
-            Step(text = "Login", done = stepLogin.done.collectAsState().value) {
-                stepLogin.action.invoke(context)
             }
         }
         Spacer(modifier = Modifier.weight(1.0f))

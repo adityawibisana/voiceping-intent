@@ -39,6 +39,7 @@ class StepOpenVoiceping : Step {
         val currentChannelReceiver : BroadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 voicepingOpenCheckScope.cancel()
+                context?.unregisterReceiver(this)
                 done.tryEmit(true)
             }
         }
