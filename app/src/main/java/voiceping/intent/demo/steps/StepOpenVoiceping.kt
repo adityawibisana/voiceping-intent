@@ -28,7 +28,6 @@ class StepOpenVoiceping : Step {
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 it.startActivity(intent)
             } catch (e: Exception) {
-                val eror = e
                 // TODO: Add warning or something
             }
         }
