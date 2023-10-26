@@ -1,23 +1,25 @@
 package voiceping.intent.demo.screen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.absolutePadding
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,7 +34,6 @@ fun ChannelScreenPreview() {
     ChannelScreen(intentSender = VoicepingIntentSender(), codeViewModel = CodeViewModel())
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChannelScreen(intentSender: VoicepingIntentSender,
                   codeViewModel: CodeViewModel) {
@@ -41,25 +42,35 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
     val code = codeViewModel.code.asStateFlow()
     var searchResult by remember { mutableStateOf("") }
 
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+
     Column(modifier = Modifier.padding(12.dp)) {
         CodeText(code = code.collectAsState().value, context = context)
         Spacer(modifier = Modifier.weight(1.0f))
 
-        OutlinedTextField(
-            value = searchResult,
-            onValueChange = {
-                searchResult = it
-                intentSender.searchChannel(context = context, it)
-                codeViewModel.code.tryEmit(codeViewModel.getSearchChannelIntentCode(it))
-            },
-            label = { Text(text = "Type to search a channel") },
-            placeholder = { Text(text = "Type anything, eg: 'channel1'") },
-            maxLines = 1,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.padding(12.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            OutlinedTextField(
+                value = searchResult,
+                onValueChange = {
+                    searchResult = it
+                    intentSender.searchChannel(context = context, it)
+                    codeViewModel.code.tryEmit(codeViewModel.getSearchChannelIntentCode(it))
+                },
+                label = { Text(text = "Search a channel") },
+                placeholder = { Text(text = "Type anything, eg: 'channel1'") },
+                singleLine = true,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(0.dp, 0.dp, 0.dp, 8.dp)
+                    .focusRequester(focusRequester)
+            )
+            Button(onClick = {
+                focusManager.clearFocus(true)
+            }, modifier = Modifier.padding(12.dp, 0.dp, 0.dp, 0.dp)) {
+                Text(text = "Search")
+            }
+        }
 
         ActionButton(text = "Prev Channel") {
             intentSender.goToPrevChannel(context)
