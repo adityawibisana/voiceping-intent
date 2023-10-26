@@ -22,7 +22,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -45,6 +45,15 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    signingConfigs {
+        create("release") {
+            keyAlias = "voiceping_intent_demo"
+            keyPassword = "voiceping_intent_demo"
+            storeFile = file("../store/keystore.jks")
+            storePassword = "voiceping_intent_demo"
+            // organization:  voiceping_intent_demo
         }
     }
 }
