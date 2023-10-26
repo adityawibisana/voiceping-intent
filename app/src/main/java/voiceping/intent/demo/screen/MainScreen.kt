@@ -53,15 +53,14 @@ fun MainScreen(navController: NavController,
             }
         }
         Spacer(modifier = Modifier.weight(1.0f))
-
-        ActionButton(text = "Go To Login Screen") {
-            navController.navigate(route = Route.LOGIN_SCREEN)
-        }
         ActionButton(text = "Go To PTT Screen") {
             navController.navigate(route = Route.START_STOP_PTT_SCREEN)
         }
         ActionButton(text = "Go To Channel Screen") {
             navController.navigate(route = Route.CHANNEL_SCREEN)
+        }
+        ActionButton(text = "Go To Login Screen") {
+            navController.navigate(route = Route.LOGIN_SCREEN)
         }
     }
 }
