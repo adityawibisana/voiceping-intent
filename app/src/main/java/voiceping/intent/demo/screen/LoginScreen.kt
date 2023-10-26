@@ -1,6 +1,7 @@
 package voiceping.intent.demo.screen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -66,8 +67,8 @@ fun LoginScreen(
 
         TextButton(onClick = {
             codeViewModel.code.tryEmit(CodeViewModel.RECEIVE_USER)
-        }) {
-            Text(text = "User: ${syncFinishedReceiver.usernameStateFlow.collectAsState().value}")
+        }, contentPadding = PaddingValues(0.dp)) {
+            Text(text = "User: ${syncFinishedReceiver.usernameStateFlow.collectAsState().value} (click to get the code)")
         }
 
         OutlinedTextField(
