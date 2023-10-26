@@ -19,7 +19,15 @@ android {
             useSupportLibrary = true
         }
     }
-
+    signingConfigs {
+        create("release") {
+            keyAlias = "voiceping_intent_demo"
+            keyPassword = "voiceping_intent_demo"
+            storeFile = file("../store/keystore.jks")
+            storePassword = "voiceping_intent_demo"
+            // organization:  voiceping_intent_demo
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -27,6 +35,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
+            isDebuggable = false
         }
     }
     compileOptions {
@@ -45,15 +55,6 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    signingConfigs {
-        create("release") {
-            keyAlias = "voiceping_intent_demo"
-            keyPassword = "voiceping_intent_demo"
-            storeFile = file("../store/keystore.jks")
-            storePassword = "voiceping_intent_demo"
-            // organization:  voiceping_intent_demo
         }
     }
 }
