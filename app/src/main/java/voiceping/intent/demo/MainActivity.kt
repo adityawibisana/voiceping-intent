@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.smartwalkie.voicepingintent.VoicepingIntentSender
+import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
 import voiceping.intent.demo.receivers.SyncFinishedReceiver
 import voiceping.intent.demo.screen.ChannelScreen
 import voiceping.intent.demo.screen.LoginScreen
@@ -32,6 +33,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val intentSender = VoicepingIntentSender()
+        val actionLogin = ActionLogin(this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(
@@ -70,7 +72,9 @@ class MainActivity : ComponentActivity() {
                         composable(Route.LOGIN_SCREEN) {
                             LoginScreen(intentSender = intentSender,
                                 codeViewModel = CodeViewModel(),
-                                syncFinishedReceiver = syncFinishedReceiver)
+                                syncFinishedReceiver = syncFinishedReceiver,
+                                actionLogin = actionLogin
+                                )
                         }
                     }
                 }
