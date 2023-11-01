@@ -33,6 +33,18 @@ class CodeViewModel {
         """.trimIndent()
     }
 
+    fun getLogoutIntentCode() : String {
+        return """
+            fun logout(context: Context) {
+                Intent().run {
+                    setPackage("com.media2359.voiceping.store")
+                    action = "logout"
+                    context.sendBroadcast(this)
+                }
+            }
+        """.trimIndent()
+    }
+
     companion object {
         const val START_PTT_CODE = """
             Intent().run { 
