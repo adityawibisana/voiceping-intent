@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.asStateFlow
 import voiceping.intent.demo.CodeViewModel
-import voiceping.intent.demo.VoicepingIntentSender
+import com.smartwalkie.voicepingintent.VoicepingIntentSender
 import voiceping.intent.demo.view.ActionButton
 import voiceping.intent.demo.view.CodeText
 

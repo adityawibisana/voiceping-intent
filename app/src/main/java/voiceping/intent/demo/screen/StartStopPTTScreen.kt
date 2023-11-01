@@ -2,7 +2,6 @@ package voiceping.intent.demo.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -12,7 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.asStateFlow
 import voiceping.intent.demo.CodeViewModel
-import voiceping.intent.demo.VoicepingIntentSender
+import com.smartwalkie.voicepingintent.VoicepingIntentSender
 import voiceping.intent.demo.view.ActionButton
 import voiceping.intent.demo.view.CodeText
 
