@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smartwalkie.voicepingintent.VoicepingIntentSender
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import voiceping.intent.demo.CodeViewModel
 import voiceping.intent.demo.view.ActionButton
@@ -47,7 +48,7 @@ fun LoginScreenPreview()  {
 fun LoginScreen(
     intentSender: VoicepingIntentSender,
     codeViewModel: CodeViewModel,
-    usernameStateFlow: MutableStateFlow<String>,
+    usernameStateFlow: StateFlow<String>,
     onLoginClicked: (String, String) -> Unit
 ) {
     val context = LocalContext.current.applicationContext

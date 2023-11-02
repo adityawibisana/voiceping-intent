@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.smartwalkie.voicepingintent.CurrentUsernameStateFlow
 import com.smartwalkie.voicepingintent.VoicepingIntentSender
 import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
 import voiceping.intent.demo.receivers.SyncFinishedReceiver
@@ -35,6 +36,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val intentSender = VoicepingIntentSender()
         loginViewModel = LoginViewModel(ActionLogin(this))
+        val currentUser = CurrentUsernameStateFlow(this)
 
         ContextCompat.registerReceiver(this, syncFinishedReceiver, syncFinishedReceiver.intentFilter, ContextCompat.RECEIVER_EXPORTED)
         // trigger, whether need to login or need
@@ -65,7 +67,7 @@ class MainActivity : ComponentActivity() {
                         composable(Route.LOGIN_SCREEN) {
                             LoginScreen(intentSender = intentSender,
                                 codeViewModel = CodeViewModel(),
-                                usernameStateFlow = syncFinishedReceiver.usernameStateFlow,
+                                usernameStateFlow = currentUser.username,
                                 onLoginClicked = { u, p ->
                                     run {
                                         loginViewModel.login(this@MainActivity, u, p)
