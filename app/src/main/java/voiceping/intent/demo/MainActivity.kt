@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
                         composable(Route.LOGIN_SCREEN) {
                             LoginScreen(intentSender = intentSender,
                                 codeViewModel = CodeViewModel(),
-                                syncFinishedReceiver = syncFinishedReceiver,
+                                usernameStateFlow = syncFinishedReceiver.usernameStateFlow,
                                 actionLogin = actionLogin
                                 )
                         }

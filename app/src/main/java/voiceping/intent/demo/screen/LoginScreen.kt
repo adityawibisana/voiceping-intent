@@ -33,6 +33,7 @@ import voiceping.intent.demo.CodeViewModel
 import com.smartwalkie.voicepingintent.VoicepingIntentSender
 import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import voiceping.intent.demo.receivers.SyncFinishedReceiver
 import voiceping.intent.demo.view.ActionButton
@@ -43,7 +44,7 @@ import voiceping.intent.demo.view.CodeText
 fun LoginScreenPreview()  {
     LoginScreen(intentSender = VoicepingIntentSender(),
         codeViewModel = CodeViewModel(),
-        syncFinishedReceiver = SyncFinishedReceiver(),
+        MutableStateFlow("User1"),
         actionLogin = ActionLogin(LocalContext.current)
     )
 }
@@ -52,7 +53,7 @@ fun LoginScreenPreview()  {
 fun LoginScreen(
     intentSender: VoicepingIntentSender,
     codeViewModel: CodeViewModel,
-    syncFinishedReceiver: SyncFinishedReceiver,
+    usernameStateFlow: MutableStateFlow<String>,
     actionLogin: ActionLogin
 ) {
     val context = LocalContext.current.applicationContext
@@ -75,7 +76,7 @@ fun LoginScreen(
         TextButton(onClick = {
             codeViewModel.code.tryEmit(CodeViewModel.RECEIVE_USER)
         }, contentPadding = PaddingValues(0.dp)) {
-            Text(text = "User: ${syncFinishedReceiver.usernameStateFlow.collectAsState().value} (click to get the code)")
+            Text(text = "User: ${usernameStateFlow.collectAsState().value} (click to get the code)")
         }
 
         OutlinedTextField(
