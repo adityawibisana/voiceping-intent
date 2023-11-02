@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.smartwalkie.voicepingintent.ActionLogout
 import com.smartwalkie.voicepingintent.CurrentUsernameStateFlow
 import com.smartwalkie.voicepingintent.VoicepingIntentSender
 import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
@@ -65,9 +66,12 @@ class MainActivity : ComponentActivity() {
                             ChannelScreen(intentSender = intentSender, codeViewModel = CodeViewModel())
                         }
                         composable(Route.LOGIN_SCREEN) {
-                            LoginScreen(intentSender = intentSender,
+                            LoginScreen(
                                 codeViewModel = CodeViewModel(),
                                 usernameStateFlow = currentUser.username,
+                                onLogoutClicked = {
+                                    ActionLogout().logout(this@MainActivity)
+                                },
                                 onLoginClicked = { u, p ->
                                     run {
                                         loginViewModel.login(this@MainActivity, u, p)

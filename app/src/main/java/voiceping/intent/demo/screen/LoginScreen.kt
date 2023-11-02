@@ -27,7 +27,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.smartwalkie.voicepingintent.VoicepingIntentSender
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,24 +37,23 @@ import voiceping.intent.demo.view.CodeText
 @Preview
 @Composable
 fun LoginScreenPreview()  {
-    LoginScreen(intentSender = VoicepingIntentSender(),
+    LoginScreen(
         codeViewModel = CodeViewModel(),
-        MutableStateFlow("User1")
-    ) { _, _ -> run {} }
+        usernameStateFlow = MutableStateFlow("User1"),
+        onLogoutClicked =  { },
+        onLoginClicked = { _, _ -> run {} }
+    )
 }
 
 @Composable
 fun LoginScreen(
-    intentSender: VoicepingIntentSender,
     codeViewModel: CodeViewModel,
     usernameStateFlow: StateFlow<String>,
-    onLoginClicked: (String, String) -> Unit
+    onLogoutClicked: () -> Unit,
+    onLoginClicked: (String, String) -> Unit,
 ) {
-    val context = LocalContext.current.applicationContext
     val code = codeViewModel.code.asStateFlow()
     val focusManager = LocalFocusManager.current
-
-    intentSender.getCurrentUser(context = context)
 
     Column(modifier = Modifier.padding(12.dp)) {
         CodeText(code = code.collectAsState().value)
@@ -131,7 +129,7 @@ fun LoginScreen(
         }
 
         TextButton(onClick = {
-            intentSender.logout(context)
+            onLogoutClicked.invoke()
             codeViewModel.code.value = codeViewModel.getLogoutIntentCode()
         }) {
             Spacer(modifier = Modifier.weight(1f))
