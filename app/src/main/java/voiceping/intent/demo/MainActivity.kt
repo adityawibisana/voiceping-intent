@@ -68,13 +68,15 @@ class MainActivity : ComponentActivity() {
                         composable(Route.LOGIN_SCREEN) {
                             LoginScreen(
                                 codeViewModel = CodeViewModel(),
-                                usernameStateFlow = currentUser.username,
+                                currentUsernameStateFlow = currentUser.username,
+                                username = loginViewModel.username,
+                                password = loginViewModel.password,
                                 onLogoutClicked = {
                                     ActionLogout().logout(this@MainActivity)
                                 },
                                 onLoginClicked = { u, p ->
                                     run {
-                                        loginViewModel.login(this@MainActivity, u, p)
+                                        loginViewModel.login(this@MainActivity)
                                     }
                                 }
                             )

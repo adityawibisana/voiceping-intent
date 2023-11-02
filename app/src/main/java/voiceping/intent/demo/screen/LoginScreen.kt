@@ -10,18 +10,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
@@ -39,18 +35,22 @@ import voiceping.intent.demo.view.CodeText
 fun LoginScreenPreview()  {
     LoginScreen(
         codeViewModel = CodeViewModel(),
-        usernameStateFlow = MutableStateFlow("User1"),
+        currentUsernameStateFlow = MutableStateFlow("User1"),
+        username = MutableStateFlow("username"),
+        password = MutableStateFlow("password"),
         onLogoutClicked =  { },
-        onLoginClicked = { _, _ -> run {} }
+        onLoginClicked = { _, _ -> run {} },
     )
 }
 
 @Composable
 fun LoginScreen(
     codeViewModel: CodeViewModel,
-    usernameStateFlow: StateFlow<String>,
+    currentUsernameStateFlow: StateFlow<String>,
+    username: MutableStateFlow<String>,
+    password: MutableStateFlow<String>,
     onLogoutClicked: () -> Unit,
-    onLoginClicked: (String, String) -> Unit,
+    onLoginClicked: (String, String) -> Unit
 ) {
     val code = codeViewModel.code.asStateFlow()
     val focusManager = LocalFocusManager.current
@@ -59,72 +59,37 @@ fun LoginScreen(
         CodeText(code = code.collectAsState().value)
         Spacer(modifier = Modifier.weight(1.0f))
 
-        var username by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
         val updateCode = {
-            codeViewModel.code.value = codeViewModel.getLoginIntentCode(username, password)
+            codeViewModel.code.value = codeViewModel.getLoginIntentCode(username.value, password.value)
         }
 
         TextButton(onClick = {
             codeViewModel.code.value = CodeViewModel.RECEIVE_USER
         }, contentPadding = PaddingValues(0.dp)) {
-            Text(text = "User: ${usernameStateFlow.collectAsState().value} (click to get the code)")
+            Text(text = "User: ${currentUsernameStateFlow.collectAsState().value} (click to get the code)")
         }
 
-        OutlinedTextField(
-            value = username,
-            onValueChange = {
-                username = it
-                updateCode()
-            },
-            label = { Text(text = "Enter your username") },
-            placeholder = { Text(text = "Username") },
-            maxLines = 1,
-            modifier = Modifier
-                .fillMaxWidth()
-                .onPreviewKeyEvent {
-                    when {
-                        KeyEventType.KeyUp == it.type &&
-                                (Key.Tab == it.key || Key.DirectionDown == it.key) -> {
-                            focusManager.moveFocus(FocusDirection.Next)
-                            true
-                        }
-
-                        else -> false
-                    }
-                }
+        val usernameState = username.collectAsState()
+        UsernameTextField(
+            focusManager = focusManager,
+            provideText = { usernameState.value },
+            onTextChange = {
+                username.value = it
+            }
         )
+
         Spacer(modifier = Modifier.padding(3.dp))
-        OutlinedTextField(
-            value = password,
-            onValueChange = {
-                password = it
-                updateCode()
-            },
-            label = { Text(text = "Enter your password") },
-            placeholder = { Text(text = "Password") },
-            maxLines = 1,
-            modifier = Modifier
-                .fillMaxWidth()
-                .onPreviewKeyEvent {
-                    when {
-                        KeyEventType.KeyUp == it.type && Key.Enter == it.key -> {
-                            onLoginClicked.invoke(username, password)
-                            true
-                        }
 
-                        KeyEventType.KeyUp == it.type && Key.DirectionUp == it.key -> {
-                            focusManager.moveFocus(FocusDirection.Previous)
-                            true
-                        }
-
-                        else -> false
-                    }
-                }
+        val passwordState = password.collectAsState()
+        PasswordTextField(
+            focusManager = focusManager,
+            provideText = { passwordState.value },
+            onTextChange = { password.value = it }
         )
+
         Spacer(modifier = Modifier.padding(3.dp))
         ActionButton(text = "Login") {
-            onLoginClicked.invoke(username, password)
+            onLoginClicked.invoke(username.value, password.value)
             updateCode()
         }
 
@@ -137,4 +102,66 @@ fun LoginScreen(
                 style = TextStyle(textDecoration = TextDecoration.Underline))
         }
     }
+}
+
+@Composable
+private fun UsernameTextField(
+    focusManager: FocusManager,
+    provideText: () -> String,
+    onTextChange: (String) -> Unit,
+) {
+    OutlinedTextField(
+        value = provideText(),
+        onValueChange = {onTextChange(it)},
+        label = { Text(text = "Enter your username") },
+        placeholder = { Text(text = "Username") },
+        maxLines = 1,
+        modifier = Modifier
+            .fillMaxWidth()
+            .onPreviewKeyEvent {
+                when {
+                    KeyEventType.KeyUp == it.type &&
+                            (Key.Tab == it.key || Key.DirectionDown == it.key) -> {
+                        focusManager.moveFocus(FocusDirection.Next)
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+    )
+}
+
+@Composable
+private fun PasswordTextField(
+    focusManager: FocusManager,
+    provideText: () -> String,
+    onTextChange: (String) -> Unit,
+) {
+    OutlinedTextField(
+        value = provideText(),
+        onValueChange = {
+            onTextChange(it)
+        },
+        label = { Text(text = "Enter your password") },
+        placeholder = { Text(text = "Password") },
+        maxLines = 1,
+        modifier = Modifier
+            .fillMaxWidth()
+            .onPreviewKeyEvent {
+                when {
+                    KeyEventType.KeyUp == it.type && Key.Enter == it.key -> {
+                        focusManager.clearFocus(true)
+                        true
+                    }
+
+                    KeyEventType.KeyUp == it.type && Key.DirectionUp == it.key -> {
+                        focusManager.moveFocus(FocusDirection.Previous)
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+    )
 }
