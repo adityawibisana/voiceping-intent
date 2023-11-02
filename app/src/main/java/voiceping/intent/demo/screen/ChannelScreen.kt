@@ -54,7 +54,7 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
                 onValueChange = {
                     searchResult = it
                     intentSender.searchChannel(context = context, it)
-                    codeViewModel.code.tryEmit(codeViewModel.getSearchChannelIntentCode(it))
+                    codeViewModel.code.value = codeViewModel.getSearchChannelIntentCode(it)
                 },
                 label = { Text(text = "Search a channel") },
                 placeholder = { Text(text = "Type anything, eg: 'channel1'") },
@@ -73,11 +73,11 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
 
         ActionButton(text = "Prev Channel") {
             intentSender.goToPrevChannel(context)
-            codeViewModel.code.tryEmit(CodeViewModel.PREV_CHANNEL_CODE)
+            codeViewModel.code.value = CodeViewModel.PREV_CHANNEL_CODE
         }
         ActionButton(text = "Next Channel") {
             intentSender.goToNextChannel(context)
-            codeViewModel.code.tryEmit(CodeViewModel.NEXT_CHANNEL_CODE)
+            codeViewModel.code.value = CodeViewModel.NEXT_CHANNEL_CODE
         }
     }
 }

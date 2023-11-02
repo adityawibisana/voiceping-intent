@@ -70,11 +70,11 @@ fun LoginScreen(
         var username by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         val updateCode = {
-            codeViewModel.code.tryEmit(codeViewModel.getLoginIntentCode(username, password))
+            codeViewModel.code.value = codeViewModel.getLoginIntentCode(username, password)
         }
 
         TextButton(onClick = {
-            codeViewModel.code.tryEmit(CodeViewModel.RECEIVE_USER)
+            codeViewModel.code.value = CodeViewModel.RECEIVE_USER
         }, contentPadding = PaddingValues(0.dp)) {
             Text(text = "User: ${usernameStateFlow.collectAsState().value} (click to get the code)")
         }
@@ -142,7 +142,7 @@ fun LoginScreen(
 
         TextButton(onClick = {
             intentSender.logout(context)
-            codeViewModel.code.tryEmit(codeViewModel.getLogoutIntentCode())
+            codeViewModel.code.value = codeViewModel.getLogoutIntentCode()
         }) {
             Spacer(modifier = Modifier.weight(1f))
             Text(text = "Logout",

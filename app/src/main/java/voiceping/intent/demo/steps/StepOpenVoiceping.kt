@@ -44,7 +44,7 @@ class StepOpenVoiceping : Step {
             override fun onReceive(context: Context?, intent: Intent?) {
                 voicepingOpenCheckScope.cancel()
                 context?.unregisterReceiver(this)
-                done.tryEmit(true)
+                done.value = true
             }
         }
         val channelInfoIntent = IntentFilter("android.led.ptt.channel_info")
@@ -64,7 +64,7 @@ class StepOpenVoiceping : Step {
         // if within 2 secs no response from voiceping, we will assume that Voiceping is not opened yet.
         voicepingOpenCheckScope.launch(Dispatchers.IO) {
             delay(2000)
-            done.tryEmit(false)
+            done.value  = false
             context.unregisterReceiver(currentChannelReceiver)
         }
     }

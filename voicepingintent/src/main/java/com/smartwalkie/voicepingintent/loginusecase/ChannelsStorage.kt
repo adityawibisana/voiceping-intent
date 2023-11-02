@@ -18,7 +18,7 @@ class ChannelsStorage(val context: Context) {
 
     fun saveChannels(channels: List<Channel?>?) {
         sharedPreferences.edit(true) {
-            _channels.tryEmit(channels)
+            _channels.value = channels
             putString(this@ChannelsStorage.channelsTag, Gson().toJson(channels))
         }
     }

@@ -34,11 +34,11 @@ fun StartStopPTTScreen(
         Spacer(Modifier.weight(1f))
         ActionButton(text = "Start PTT") {
             intentSender.startPTT(context)
-            codeViewModel.code.tryEmit(CodeViewModel.START_PTT_CODE.trim())
+            codeViewModel.code.value = CodeViewModel.START_PTT_CODE.trim()
         }
         ActionButton(text = "Stop PTT") {
             intentSender.stopPTT(context)
-            codeViewModel.code.tryEmit(CodeViewModel.STOP_PTT_CODE.trim())
+            codeViewModel.code.value = CodeViewModel.STOP_PTT_CODE.trim()
         }
     }
 }

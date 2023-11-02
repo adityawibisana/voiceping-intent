@@ -18,7 +18,7 @@ class SyncFinishedReceiver : BroadcastReceiver() {
 
         val username = intent.getStringExtra("username")
         username ?: return
-        usernameStateFlow.tryEmit(username)
+        usernameStateFlow.value = username
 
         // HINT: try calling intent.getStringExtra("channels")
     }
