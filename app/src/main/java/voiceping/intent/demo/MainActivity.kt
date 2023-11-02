@@ -1,7 +1,6 @@
 package voiceping.intent.demo
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.content.ContextCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -36,15 +36,7 @@ class MainActivity : ComponentActivity() {
         val intentSender = VoicepingIntentSender()
         loginViewModel = LoginViewModel(ActionLogin(this))
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(
-                syncFinishedReceiver,
-                syncFinishedReceiver.intentFilter,
-                RECEIVER_EXPORTED
-            )
-        } else {
-            registerReceiver(syncFinishedReceiver, syncFinishedReceiver.intentFilter)
-        }
+        ContextCompat.registerReceiver(this, syncFinishedReceiver, syncFinishedReceiver.intentFilter, ContextCompat.RECEIVER_EXPORTED)
         // trigger, whether need to login or need
         intentSender.getCurrentUser(this)
 
