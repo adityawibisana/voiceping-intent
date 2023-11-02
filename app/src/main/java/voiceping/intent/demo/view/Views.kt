@@ -33,11 +33,12 @@ import voiceping.intent.demo.ui.theme.codeFontStyle
 @Preview
 @Composable
 fun CodeTextPreview() {
-    CodeText(code = "val Intent = Intent()", context = LocalContext.current)
+    CodeText(code = "val Intent = Intent()")
 }
 
 @Composable
-fun CodeText(code: String, context: Context) {
+fun CodeText(code: String) {
+    val context = LocalContext.current
     val copyCode = {
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
         val clip = ClipData.newPlainText("source code", code)

@@ -30,7 +30,7 @@ fun StartStopPTTScreen(
     Column(modifier = Modifier.padding(12.dp)) {
         val code = codeViewModel.code.asStateFlow()
 
-        CodeText(code.collectAsState().value, context = context)
+        CodeText(code.collectAsState().value)
         Spacer(Modifier.weight(1f))
         ActionButton(text = "Start PTT") {
             intentSender.startPTT(context)

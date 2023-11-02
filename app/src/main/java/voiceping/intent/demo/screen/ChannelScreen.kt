@@ -45,7 +45,7 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
     val focusManager = LocalFocusManager.current
 
     Column(modifier = Modifier.padding(12.dp)) {
-        CodeText(code = code.collectAsState().value, context = context)
+        CodeText(code = code.collectAsState().value)
         Spacer(modifier = Modifier.weight(1.0f))
 
         Row(verticalAlignment = Alignment.CenterVertically) {

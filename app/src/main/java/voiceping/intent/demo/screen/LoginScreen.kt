@@ -63,7 +63,7 @@ fun LoginScreen(
     intentSender.getCurrentUser(context = context)
 
     Column(modifier = Modifier.padding(12.dp)) {
-        CodeText(code = code.collectAsState().value, context = context)
+        CodeText(code = code.collectAsState().value)
         Spacer(modifier = Modifier.weight(1.0f))
 
         var username by remember { mutableStateOf("") }
