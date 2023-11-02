@@ -13,7 +13,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -28,14 +27,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smartwalkie.voicepingintent.VoicepingIntentSender
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import voiceping.intent.demo.CodeViewModel
-import com.smartwalkie.voicepingintent.VoicepingIntentSender
-import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
-import voiceping.intent.demo.receivers.SyncFinishedReceiver
 import voiceping.intent.demo.view.ActionButton
 import voiceping.intent.demo.view.CodeText
 
@@ -44,9 +39,8 @@ import voiceping.intent.demo.view.CodeText
 fun LoginScreenPreview()  {
     LoginScreen(intentSender = VoicepingIntentSender(),
         codeViewModel = CodeViewModel(),
-        MutableStateFlow("User1"),
-        actionLogin = ActionLogin(LocalContext.current)
-    )
+        MutableStateFlow("User1")
+    ) { _, _ -> run {} }
 }
 
 @Composable
@@ -54,12 +48,11 @@ fun LoginScreen(
     intentSender: VoicepingIntentSender,
     codeViewModel: CodeViewModel,
     usernameStateFlow: MutableStateFlow<String>,
-    actionLogin: ActionLogin
+    onLoginClicked: (String, String) -> Unit
 ) {
     val context = LocalContext.current.applicationContext
     val code = codeViewModel.code.asStateFlow()
     val focusManager = LocalFocusManager.current
-    val coroutineScope = rememberCoroutineScope()
 
     intentSender.getCurrentUser(context = context)
 
@@ -117,9 +110,7 @@ fun LoginScreen(
                 .onPreviewKeyEvent {
                     when {
                         KeyEventType.KeyUp == it.type && Key.Enter == it.key -> {
-                            coroutineScope.launch(Dispatchers.IO) {
-                                actionLogin.login(context, username, password)
-                            }
+                            onLoginClicked.invoke(username, password)
                             true
                         }
 
@@ -134,9 +125,7 @@ fun LoginScreen(
         )
         Spacer(modifier = Modifier.padding(3.dp))
         ActionButton(text = "Login") {
-            coroutineScope.launch(Dispatchers.IO) {
-                actionLogin.login(context, username, password)
-            }
+            onLoginClicked.invoke(username, password)
             updateCode()
         }
 

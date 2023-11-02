@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -28,12 +29,13 @@ class MainActivity : ComponentActivity() {
     private val stepInstallVoiceping = StepInstallVoiceping()
     private val syncFinishedReceiver = SyncFinishedReceiver()
     private val stepOpenVoiceping = StepOpenVoiceping()
+    private lateinit var loginViewModel : LoginViewModel
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val intentSender = VoicepingIntentSender()
-        val actionLogin = ActionLogin(this)
+        loginViewModel = LoginViewModel(ActionLogin(this))
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(
@@ -73,8 +75,12 @@ class MainActivity : ComponentActivity() {
                             LoginScreen(intentSender = intentSender,
                                 codeViewModel = CodeViewModel(),
                                 usernameStateFlow = syncFinishedReceiver.usernameStateFlow,
-                                actionLogin = actionLogin
-                                )
+                                onLoginClicked = { u, p ->
+                                    run {
+                                        loginViewModel.login(this@MainActivity, u, p)
+                                    }
+                                }
+                            )
                         }
                     }
                 }
