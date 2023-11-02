@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "VoicepingIntentDemo"
 include(":app")
+include(":voicepingintent")

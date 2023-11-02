@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.asStateFlow
 import voiceping.intent.demo.CodeViewModel
-import voiceping.intent.demo.VoicepingIntentSender
+import com.smartwalkie.voicepingintent.VoicepingIntentSender
 import voiceping.intent.demo.view.ActionButton
 import voiceping.intent.demo.view.CodeText
 
@@ -45,7 +45,7 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
     val focusManager = LocalFocusManager.current
 
     Column(modifier = Modifier.padding(12.dp)) {
-        CodeText(code = code.collectAsState().value, context = context)
+        CodeText(code = code.collectAsState().value)
         Spacer(modifier = Modifier.weight(1.0f))
 
         Row(verticalAlignment = Alignment.CenterVertically) {

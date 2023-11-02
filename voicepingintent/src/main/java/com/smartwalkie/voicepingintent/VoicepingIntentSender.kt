@@ -1,4 +1,4 @@
-package voiceping.intent.demo
+package com.smartwalkie.voicepingintent
 
 import android.content.Context
 import android.content.Intent
