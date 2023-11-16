@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,6 +17,8 @@ import com.smartwalkie.voicepingintent.ActionLogout
 import com.smartwalkie.voicepingintent.CurrentUsernameStateFlow
 import com.smartwalkie.voicepingintent.VoicepingIntentSender
 import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import voiceping.intent.demo.receivers.SyncFinishedReceiver
 import voiceping.intent.demo.screen.ChannelScreen
 import voiceping.intent.demo.screen.LoginScreen
@@ -41,7 +44,9 @@ class MainActivity : ComponentActivity() {
 
         ContextCompat.registerReceiver(this, syncFinishedReceiver, syncFinishedReceiver.intentFilter, ContextCompat.RECEIVER_EXPORTED)
         // trigger, whether need to login or need
-        intentSender.getCurrentUser(this)
+        lifecycleScope.launch(Dispatchers.IO) {
+            intentSender.getCurrentUser(this@MainActivity)
+        }
 
         setContent {
             VoicepingIntentDemoTheme {
