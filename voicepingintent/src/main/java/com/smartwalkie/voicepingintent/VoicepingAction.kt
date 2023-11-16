@@ -16,8 +16,10 @@ object VoicepingAction {
     const val STATE_PLAYING = 2
 
     private val voicepingIntentSender = VoicepingIntentSender()
+
     private val _state = MutableLiveData(STATE_IDLE)
     val state: LiveData<Int> get() = _state
+    private var isInitialized = true
 
     /**
      * return LoginFailed if timed out for 10 secs
@@ -65,6 +67,10 @@ object VoicepingAction {
      * This will allows you to listen voiceping state
      */
     fun initializeState(context: Context) {
+        if (isInitialized)
+            return
+        isInitialized = true
+
         val idleAction = "com.dfl.greenled.off"
         val recordActions = arrayListOf(
             "android.led.ptt.yellow",
