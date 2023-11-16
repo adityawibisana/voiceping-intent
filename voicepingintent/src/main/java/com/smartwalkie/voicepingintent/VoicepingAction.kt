@@ -19,7 +19,7 @@ object VoicepingAction {
 
     private val _state = MutableLiveData(STATE_IDLE)
     val state: LiveData<Int> get() = _state
-    private var isInitialized = true
+    private lateinit var stateReceiver: BroadcastReceiver
 
     /**
      * return LoginFailed if timed out for 10 secs
@@ -63,14 +63,9 @@ object VoicepingAction {
     }
 
     /**
-     * Initialize for one time.
      * This will allows you to listen voiceping state
      */
-    fun initializeState(context: Context) {
-        if (isInitialized)
-            return
-        isInitialized = true
-
+    fun startListeningState(context: Context) {
         val idleAction = "com.dfl.greenled.off"
         val recordActions = arrayListOf(
             "android.led.ptt.yellow",
@@ -78,7 +73,7 @@ object VoicepingAction {
         )
         val playAction = "com.dfl.greenled.on"
 
-        val receiver = object: BroadcastReceiver() {
+        stateReceiver = object: BroadcastReceiver() {
             override fun onReceive(c: Context?, intent: Intent?) {
                 intent ?: return
 
@@ -95,6 +90,12 @@ object VoicepingAction {
         recordActions.forEach {
             intentFilter.addAction(it)
         }
-        ContextCompat.registerReceiver(context, receiver, intentFilter, ContextCompat.RECEIVER_EXPORTED)
+        ContextCompat.registerReceiver(context, stateReceiver, intentFilter, ContextCompat.RECEIVER_EXPORTED)
+    }
+
+    // stop listening to voiceping state
+    fun stopListeningState(context: Context) {
+        if (!::stateReceiver.isInitialized) return
+        context.unregisterReceiver(stateReceiver)
     }
 }
