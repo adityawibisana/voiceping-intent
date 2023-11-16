@@ -65,7 +65,7 @@ object VoicepingAction {
     /**
      * This will allows you to listen voiceping state
      */
-    fun startListeningState(context: Context) {
+    fun startListeningState(context: Context) : LiveData<Int> {
         val idleAction = "com.dfl.greenled.off"
         val recordActions = arrayListOf(
             "android.led.ptt.yellow",
@@ -91,6 +91,7 @@ object VoicepingAction {
             intentFilter.addAction(it)
         }
         ContextCompat.registerReceiver(context, stateReceiver, intentFilter, ContextCompat.RECEIVER_EXPORTED)
+        return state
     }
 
     // stop listening to voiceping state
