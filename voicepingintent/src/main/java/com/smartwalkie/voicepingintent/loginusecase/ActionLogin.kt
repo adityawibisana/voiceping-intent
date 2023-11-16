@@ -7,6 +7,7 @@ import android.content.Context.RECEIVER_NOT_EXPORTED
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import androidx.core.content.ContextCompat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.smartwalkie.voicepingintent.Channel
@@ -27,8 +28,7 @@ class ActionLogin(context: Context) {
         channelStorage = ChannelsStorage(context)
     }
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
-    suspend fun login(context: Context, username: String, password: String) = suspendCoroutine<LoginResult?> {
+    suspend fun login(context: Context, username: String, password: String) = suspendCoroutine {
         val timeout = CoroutineScope(Job()).launch(Dispatchers.IO) {
             delay(10_000)
             if (this.isActive) {
@@ -74,11 +74,7 @@ class ActionLogin(context: Context) {
                 }
             }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(syncFinishedReceiver, intentFilter, RECEIVER_NOT_EXPORTED)
-        } else {
-            context.registerReceiver(syncFinishedReceiver, intentFilter)
-        }
+        ContextCompat.registerReceiver(context, syncFinishedReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED)
 
         Intent().apply {
             setPackage("com.media2359.voiceping.store")

@@ -1,12 +1,19 @@
 package com.smartwalkie.voicepingintent
 
 import android.content.Context
+import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
+import com.smartwalkie.voicepingintent.loginusecase.LoginResult
+import kotlin.coroutines.suspendCoroutine
 
 object VoicepingAction {
     private val voicepingIntentSender = VoicepingIntentSender()
 
-    fun login(context: Context, username: String, password: String) {
-        voicepingIntentSender.login(context, username, password)
+    /**
+     * return LoginFailed if timed out for 10 secs
+     */
+    suspend fun login(context: Context, username: String, password: String) : LoginResult {
+        val action = ActionLogin(context)
+        return action.login(context, username, password)
     }
 
     fun logout(context: Context) {
