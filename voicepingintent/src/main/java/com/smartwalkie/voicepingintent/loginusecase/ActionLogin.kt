@@ -9,6 +9,7 @@ import android.content.IntentFilter
 import android.os.Build
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.smartwalkie.voicepingintent.Channel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

@@ -1,4 +1,4 @@
-package com.smartwalkie.voicepingintent.loginusecase
+package com.smartwalkie.voicepingintent
 
 class Channel {
     var name: String? = null
