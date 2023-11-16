@@ -64,7 +64,7 @@ publishing {
             artifactId = "voiceping"
             version = "0.0.1"
 
-            artifact("$buildDir/outputs/aar/bar-release.aar")
+            artifact("$buildDir/outputs/aar/voicepingintent-release.aar")
 
             pom.withXml {
                 val dependencies = asNode().appendNode("dependencies")
