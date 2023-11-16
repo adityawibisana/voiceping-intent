@@ -1,7 +1,17 @@
 package com.smartwalkie.voicepingintent
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import androidx.core.content.ContextCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class VoicepingIntentSender {
 
@@ -68,7 +78,44 @@ class VoicepingIntentSender {
         }
     }
 
-    fun getCurrentUser(context: Context) {
+    suspend fun getCurrentUser(context: Context) = suspendCoroutine {
+        val timeout = CoroutineScope(Job()).launch {
+            delay(10_000)
+            it.resumeWithException(Error("Timeout after 10 secs. Likely, Voiceping is not opened."))
+        }
+
+        val userReceiver = object : BroadcastReceiver() {
+            override fun onReceive(c: Context?, intent: Intent?) {
+                timeout.cancel()
+
+                if (c == null) {
+                    it.resumeWithException(Error("context null. Shouldn't happened"))
+                    return
+                }
+
+                if (intent == null) {
+                    it.resumeWithException(Error("intent is null. Shouldn't happened"))
+                    return
+                }
+
+                val username = if (intent.getStringExtra("username") == null) {
+                    ""
+                } else intent.getStringExtra("username")!!
+
+                val fullname = if (intent.getStringExtra("fullname") == null) {
+                    ""
+                } else intent.getStringExtra("fullname")!!
+
+                it.resume(User(username, fullname))
+                context.unregisterReceiver(this)
+            }
+        }
+
+
+        val filter = IntentFilter()
+        filter.addAction("com.voiceping.store.user")
+        ContextCompat.registerReceiver(context, userReceiver, filter, ContextCompat.RECEIVER_EXPORTED)
+
         getIntent().run {
             action = "com.voiceping.store.get_user"
             context.sendBroadcast(this)
