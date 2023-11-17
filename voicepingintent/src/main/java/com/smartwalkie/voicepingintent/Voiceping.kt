@@ -7,6 +7,6 @@ object Voiceping {
     val state = VoicepingState
 
     fun initialize(context: Context) {
-        state.initialize(context)
+        state.initialize(context.applicationContext)
     }
 }

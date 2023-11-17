@@ -1,25 +1,11 @@
 package com.smartwalkie.voicepingintent
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
 import com.smartwalkie.voicepingintent.loginusecase.LoginResult
 
 object VoicepingAction {
-    const val STATE_IDLE = 0
-    const val STATE_RECORDING = 1
-    const val STATE_PLAYING = 2
-
     private val voicepingIntentSender = VoicepingIntentSender()
-
-    private val _state = MutableLiveData(STATE_IDLE)
-    val state: LiveData<Int> get() = _state
-    private lateinit var stateReceiver: BroadcastReceiver
 
     /**
      * return LoginFailed if timed out for 10 secs
@@ -60,43 +46,5 @@ object VoicepingAction {
      */
     suspend fun getUser(context: Context) : User {
         return voicepingIntentSender.getCurrentUser(context)
-    }
-
-    /**
-     * This will allows you to listen voiceping state
-     */
-    fun startListeningState(context: Context) : LiveData<Int> {
-        val idleAction = "com.dfl.greenled.off"
-        val recordActions = arrayListOf(
-            "android.led.ptt.yellow",
-            "android.led.ptt.red"
-        )
-        val playAction = "com.dfl.greenled.on"
-
-        stateReceiver = object: BroadcastReceiver() {
-            override fun onReceive(c: Context?, intent: Intent?) {
-                intent ?: return
-
-                when (intent.action) {
-                    idleAction -> _state.postValue(STATE_IDLE)
-                    playAction -> _state.postValue(STATE_PLAYING)
-                    else -> _state.postValue(STATE_RECORDING)
-                }
-            }
-        }
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(idleAction)
-        intentFilter.addAction(playAction)
-        recordActions.forEach {
-            intentFilter.addAction(it)
-        }
-        ContextCompat.registerReceiver(context, stateReceiver, intentFilter, ContextCompat.RECEIVER_EXPORTED)
-        return state
-    }
-
-    // stop listening to voiceping state
-    fun stopListeningState(context: Context) {
-        if (!::stateReceiver.isInitialized) return
-        context.unregisterReceiver(stateReceiver)
     }
 }

@@ -9,9 +9,11 @@ import androidx.core.content.ContextCompat.RECEIVER_EXPORTED
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class CurrentUserStateFlow(context: Context) {
+class CurrentUserStateFlow(val context: Context) {
     private val _user = MutableStateFlow(User("", ""))
     val user = _user.asStateFlow()
+
+    private lateinit var receiver: BroadcastReceiver
 
     init {
         val intentFilter = IntentFilter().apply {
@@ -19,7 +21,7 @@ class CurrentUserStateFlow(context: Context) {
             addAction("com.voiceping.store.user")
         }
 
-        val receiver = object: BroadcastReceiver() {
+        receiver = object: BroadcastReceiver() {
             override fun onReceive(c: Context?, intent: Intent?) {
                 intent ?: return
 
@@ -38,5 +40,10 @@ class CurrentUserStateFlow(context: Context) {
             action = "com.voiceping.store.get_user"
             context.sendBroadcast(this)
         }
+    }
+
+    fun destroy() {
+        if (!::receiver.isInitialized) return
+        context.unregisterReceiver(receiver)
     }
 }
