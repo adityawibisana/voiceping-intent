@@ -9,9 +9,9 @@ import androidx.core.content.ContextCompat.RECEIVER_EXPORTED
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class CurrentUsernameStateFlow(context: Context) {
-    private val _username = MutableStateFlow("")
-    val username = _username.asStateFlow()
+class CurrentUserStateFlow(context: Context) {
+    private val _user = MutableStateFlow(User("", ""))
+    val user = _user.asStateFlow()
 
     init {
         val intentFilter = IntentFilter().apply {
@@ -22,9 +22,14 @@ class CurrentUsernameStateFlow(context: Context) {
         val receiver = object: BroadcastReceiver() {
             override fun onReceive(c: Context?, intent: Intent?) {
                 intent ?: return
-                val username = intent.getStringExtra("username")
-                username ?: return
-                _username.value = username
+
+                var username = intent.getStringExtra("username")
+                if (username == null) username = ""
+
+                var fullname = intent.getStringExtra("fullname")
+                if (fullname == null) fullname = ""
+
+                _user.value = User(username, fullname)
             }
         }
         ContextCompat.registerReceiver(context, receiver, intentFilter, RECEIVER_EXPORTED)
