@@ -14,7 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.smartwalkie.voicepingintent.ActionLogout
-import com.smartwalkie.voicepingintent.CurrentUsernameStateFlow
+import com.smartwalkie.voicepingintent.Voiceping
 import com.smartwalkie.voicepingintent.VoicepingIntentSender
 import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
 import kotlinx.coroutines.Dispatchers
@@ -38,9 +38,10 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Voiceping.initialize(this)
+
         val intentSender = VoicepingIntentSender()
         loginViewModel = LoginViewModel(ActionLogin(this))
-        val currentUser = CurrentUsernameStateFlow(this)
 
         ContextCompat.registerReceiver(this, syncFinishedReceiver, syncFinishedReceiver.intentFilter, ContextCompat.RECEIVER_EXPORTED)
         // trigger, whether need to login or need
@@ -73,7 +74,7 @@ class MainActivity : ComponentActivity() {
                         composable(Route.LOGIN_SCREEN) {
                             LoginScreen(
                                 codeViewModel = CodeViewModel(),
-                                currentUsernameStateFlow = currentUser.username,
+                                currentUserStateFlow = Voiceping.state.user,
                                 username = loginViewModel.username,
                                 password = loginViewModel.password,
                                 onLogoutClicked = {

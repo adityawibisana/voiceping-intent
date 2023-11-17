@@ -23,6 +23,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smartwalkie.voicepingintent.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,7 +36,7 @@ import voiceping.intent.demo.view.CodeText
 fun LoginScreenPreview()  {
     LoginScreen(
         codeViewModel = CodeViewModel(),
-        currentUsernameStateFlow = MutableStateFlow("User1"),
+        currentUserStateFlow = MutableStateFlow(User("", "")),
         username = MutableStateFlow("username"),
         password = MutableStateFlow("password"),
         onLogoutClicked =  { },
@@ -46,7 +47,7 @@ fun LoginScreenPreview()  {
 @Composable
 fun LoginScreen(
     codeViewModel: CodeViewModel,
-    currentUsernameStateFlow: StateFlow<String>,
+    currentUserStateFlow: StateFlow<User>,
     username: MutableStateFlow<String>,
     password: MutableStateFlow<String>,
     onLogoutClicked: () -> Unit,
@@ -66,7 +67,7 @@ fun LoginScreen(
         TextButton(onClick = {
             codeViewModel.code.value = CodeViewModel.RECEIVE_USER
         }, contentPadding = PaddingValues(0.dp)) {
-            Text(text = "User: ${currentUsernameStateFlow.collectAsState().value} (click to get the code)")
+            Text(text = "User: ${currentUserStateFlow.collectAsState().value.username} (click to get the code)")
         }
 
         val usernameState = username.collectAsState()
