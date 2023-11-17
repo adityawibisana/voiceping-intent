@@ -1,41 +1,49 @@
 package com.smartwalkie.voicepingintent
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
 import com.smartwalkie.voicepingintent.loginusecase.LoginResult
 
+@SuppressLint("StaticFieldLeak")
 object VoicepingAction {
     private val voicepingIntentSender = VoicepingIntentSender()
+
+    lateinit var context: Context
+
+    fun initialize(context: Context) {
+        this.context = context
+    }
 
     /**
      * return LoginFailed if timed out for 10 secs
      */
-    suspend fun login(context: Context, username: String, password: String) : LoginResult {
+    suspend fun login(username: String, password: String) : LoginResult {
         val action = ActionLogin(context)
         return action.login(context, username, password)
     }
 
-    fun logout(context: Context) {
+    fun logout() {
         voicepingIntentSender.logout(context)
     }
 
-    fun startPTT(context: Context) {
+    fun startPTT() {
         voicepingIntentSender.startPTT(context)
     }
 
-    fun stopPTT(context: Context) {
+    fun stopPTT() {
         voicepingIntentSender.stopPTT(context)
     }
 
-    fun goToNextChannel(context: Context) {
+    fun goToNextChannel() {
         voicepingIntentSender.goToNextChannel(context)
     }
 
-    fun goToPrevChannel(context: Context) {
+    fun goToPrevChannel() {
         voicepingIntentSender.goToPrevChannel(context)
     }
 
-    fun searchChannel(context: Context, channelName: String) {
+    fun searchChannel(channelName: String) {
         voicepingIntentSender.searchChannel(context, channelName)
     }
 
@@ -44,7 +52,7 @@ object VoicepingAction {
      * Throw error when Voiceping is not responding for 10s
      * return non null object with empty "username" and "fullname" if VP is not logged in.
      */
-    suspend fun getUser(context: Context) : User {
+    suspend fun getUser() : User {
         return voicepingIntentSender.getCurrentUser(context)
     }
 }
