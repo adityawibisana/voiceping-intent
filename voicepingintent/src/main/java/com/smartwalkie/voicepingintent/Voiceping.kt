@@ -5,11 +5,11 @@ import android.content.Context
 
 object Voiceping {
     @SuppressLint("StaticFieldLeak")
-    val action = VoicepingAction
+    lateinit var action : VoicepingAction
     val state = VoicepingState
 
     fun initialize(context: Context) {
+        action = VoicepingAction(context.applicationContext)
         state.initialize(context.applicationContext)
-        action.initialize(context.applicationContext)
     }
 }

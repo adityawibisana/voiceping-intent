@@ -1,19 +1,11 @@
 package com.smartwalkie.voicepingintent
 
-import android.annotation.SuppressLint
 import android.content.Context
 import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
 import com.smartwalkie.voicepingintent.loginusecase.LoginResult
 
-@SuppressLint("StaticFieldLeak")
-object VoicepingAction {
+class VoicepingAction(private val context: Context) {
     private val voicepingIntentSender = VoicepingIntentSender()
-
-    lateinit var context: Context
-
-    fun initialize(context: Context) {
-        this.context = context
-    }
 
     /**
      * return LoginFailed if timed out for 10 secs

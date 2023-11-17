@@ -9,11 +9,11 @@ import androidx.core.content.ContextCompat.RECEIVER_EXPORTED
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class CurrentUserStateFlow(val context: Context) {
+class CurrentUserStateFlow(private val context: Context) {
     private val _user = MutableStateFlow(User("", ""))
     val user = _user.asStateFlow()
 
-    private lateinit var receiver: BroadcastReceiver
+    private var receiver: BroadcastReceiver
 
     init {
         val intentFilter = IntentFilter().apply {
@@ -43,7 +43,6 @@ class CurrentUserStateFlow(val context: Context) {
     }
 
     fun destroy() {
-        if (!::receiver.isInitialized) return
         context.unregisterReceiver(receiver)
     }
 }
