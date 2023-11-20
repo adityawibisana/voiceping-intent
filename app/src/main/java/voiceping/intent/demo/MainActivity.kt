@@ -13,7 +13,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.smartwalkie.voicepingintent.ActionLogout
 import com.smartwalkie.voicepingintent.Voiceping
-import com.smartwalkie.voicepingintent.VoicepingIntentSender
 import voiceping.intent.demo.screen.ChannelScreen
 import voiceping.intent.demo.screen.LoginScreen
 import voiceping.intent.demo.screen.MainScreen
@@ -33,7 +32,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         Voiceping.initialize(this)
 
-        val intentSender = VoicepingIntentSender()
         loginViewModel = LoginViewModel()
 
         setContent {

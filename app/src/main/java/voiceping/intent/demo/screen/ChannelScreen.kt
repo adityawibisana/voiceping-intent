@@ -25,12 +25,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smartwalkie.voicepingintent.CurrentChannel
 import com.smartwalkie.voicepingintent.Voiceping
-import kotlinx.coroutines.flow.asStateFlow
-import voiceping.intent.demo.CodeViewModel
-import com.smartwalkie.voicepingintent.VoicepingIntentSender
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.asStateFlow
+import voiceping.intent.demo.CodeViewModel
 import voiceping.intent.demo.view.ActionButton
 import voiceping.intent.demo.view.CodeText
 
