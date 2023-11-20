@@ -1,5 +1,6 @@
 package com.smartwalkie.voicepingintent
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
@@ -56,10 +57,11 @@ class VoicepingAction(private val context: Context) {
      */
     fun openVoiceping(context: Context) {
         val packageName = "com.media2359.voiceping.store"
-        context.packageManager.getLaunchIntentForPackage(packageName)!!.let {
-            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            it.putExtra("headless", true)
-            context.startActivity(it)
-        }
+        val activityName = "com.media2359.voiceping.SplashActivity"
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.component = ComponentName(packageName, activityName)
+        intent.putExtra("headless", true)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        context.startActivity(intent)
     }
 }
