@@ -44,10 +44,6 @@ class MainActivity : ComponentActivity() {
         loginViewModel = LoginViewModel(ActionLogin(this))
 
         ContextCompat.registerReceiver(this, syncFinishedReceiver, syncFinishedReceiver.intentFilter, ContextCompat.RECEIVER_EXPORTED)
-        // trigger, whether need to login or need
-        lifecycleScope.launch(Dispatchers.IO) {
-            intentSender.getCurrentUser(this@MainActivity)
-        }
 
         setContent {
             VoicepingIntentDemoTheme {

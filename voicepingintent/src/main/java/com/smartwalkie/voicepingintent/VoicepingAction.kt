@@ -57,7 +57,7 @@ class VoicepingAction(private val context: Context) {
      */
     fun openVoiceping(context: Context) {
         val packageName = "com.media2359.voiceping.store"
-        val activityName = "com.media2359.voiceping.SplashActivity"
+        val activityName = "com.media2359.voiceping.FavoriteActivity"
         val intent = Intent(Intent.ACTION_MAIN)
         intent.component = ComponentName(packageName, activityName)
         intent.putExtra("headless", true)
