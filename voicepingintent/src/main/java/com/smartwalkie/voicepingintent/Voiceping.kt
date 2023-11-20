@@ -8,8 +8,14 @@ object Voiceping {
     lateinit var action : VoicepingAction
     val state = VoicepingState
 
+    private var isInitialized = false
+
     fun initialize(context: Context) {
+        if (isInitialized) return
+        isInitialized = true
+
         action = VoicepingAction(context.applicationContext)
         state.initialize(context.applicationContext)
+        action.openVoiceping(context)
     }
 }

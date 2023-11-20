@@ -1,6 +1,7 @@
 package com.smartwalkie.voicepingintent
 
 import android.content.Context
+import android.content.Intent
 import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
 import com.smartwalkie.voicepingintent.loginusecase.LoginResult
 
@@ -46,5 +47,19 @@ class VoicepingAction(private val context: Context) {
      */
     suspend fun getUser() : User {
         return voicepingIntentSender.getCurrentUser(context)
+    }
+
+
+    /**
+     * Open Voiceping in headless mode.
+     * Throw error if Voiceping is not installed
+     */
+    fun openVoiceping(context: Context) {
+        val packageName = "com.media2359.voiceping.store"
+        context.packageManager.getLaunchIntentForPackage(packageName)!!.let {
+            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            it.putExtra("headless", true)
+            context.startActivity(it)
+        }
     }
 }
