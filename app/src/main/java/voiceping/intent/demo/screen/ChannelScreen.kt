@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smartwalkie.voicepingintent.Voiceping
 import kotlinx.coroutines.flow.asStateFlow
 import voiceping.intent.demo.CodeViewModel
 import com.smartwalkie.voicepingintent.VoicepingIntentSender
@@ -30,12 +31,11 @@ import voiceping.intent.demo.view.CodeText
 @Preview
 @Composable
 fun ChannelScreenPreview() {
-    ChannelScreen(intentSender = VoicepingIntentSender(), codeViewModel = CodeViewModel())
+    ChannelScreen(codeViewModel = CodeViewModel())
 }
 
 @Composable
-fun ChannelScreen(intentSender: VoicepingIntentSender,
-                  codeViewModel: CodeViewModel) {
+fun ChannelScreen(codeViewModel: CodeViewModel) {
     val context = LocalContext.current.applicationContext
 
     val code = codeViewModel.code.asStateFlow()
@@ -53,7 +53,7 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
                 value = searchResult,
                 onValueChange = {
                     searchResult = it
-                    intentSender.searchChannel(context = context, it)
+                    Voiceping.action.searchChannel(it)
                     codeViewModel.code.value = codeViewModel.getSearchChannelIntentCode(it)
                 },
                 label = { Text(text = "Search a channel") },
@@ -72,11 +72,11 @@ fun ChannelScreen(intentSender: VoicepingIntentSender,
         }
 
         ActionButton(text = "Prev Channel") {
-            intentSender.goToPrevChannel(context)
+            Voiceping.action.goToPrevChannel()
             codeViewModel.code.value = CodeViewModel.PREV_CHANNEL_CODE
         }
         ActionButton(text = "Next Channel") {
-            intentSender.goToNextChannel(context)
+            Voiceping.action.goToNextChannel()
             codeViewModel.code.value = CodeViewModel.NEXT_CHANNEL_CODE
         }
     }

@@ -27,4 +27,18 @@ object VoicepingState {
         currentChannelStateFlow = CurrentChannelStateFlow(context)
         currentChannel = currentChannelStateFlow.channel
     }
+
+    fun destroy() {
+        if (::currentUsernameStateFlow.isInitialized) {
+            currentUsernameStateFlow.destroy()
+        }
+
+        if (::currentUsernameStateFlow.isInitialized) {
+            currentProcessorStateFlow.destroy()
+        }
+
+        if (::currentChannelStateFlow.isInitialized) {
+            currentChannelStateFlow.destroy()
+        }
+    }
 }

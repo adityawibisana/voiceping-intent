@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                             StartStopPTTScreen(codeViewModel = CodeViewModel())
                         }
                         composable(Route.CHANNEL_SCREEN) {
-                            ChannelScreen(intentSender = intentSender, codeViewModel = CodeViewModel())
+                            ChannelScreen(codeViewModel = CodeViewModel())
                         }
                         composable(Route.LOGIN_SCREEN) {
                             LoginScreen(
