@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class CurrentChannelStateFlow(private val context: Context) {
     private val receiver : BroadcastReceiver
-    private val _channel = MutableStateFlow(CurrentChannel())
+    private val _channel = MutableStateFlow(CurrentChannel("", CurrentChannel.TYPE_UNKNOWN))
     val channel = _channel.asStateFlow()
 
     init {
@@ -22,7 +22,7 @@ class CurrentChannelStateFlow(private val context: Context) {
                 val name = intent.getStringExtra("name")
                 name ?: return
 
-                val type = intent.getIntExtra("type", -1)
+                val type = intent.getIntExtra("type", CurrentChannel.TYPE_UNKNOWN)
 
                 _channel.value = CurrentChannel(name, type)
             }
