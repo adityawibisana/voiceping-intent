@@ -8,15 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.smartwalkie.voicepingintent.ActionLogout
 import com.smartwalkie.voicepingintent.Voiceping
 import com.smartwalkie.voicepingintent.VoicepingIntentSender
-import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
 import voiceping.intent.demo.screen.ChannelScreen
 import voiceping.intent.demo.screen.LoginScreen
 import voiceping.intent.demo.screen.MainScreen
