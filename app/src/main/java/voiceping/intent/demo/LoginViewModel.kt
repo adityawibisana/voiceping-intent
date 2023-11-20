@@ -1,19 +1,18 @@
 package voiceping.intent.demo
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
+import com.smartwalkie.voicepingintent.Voiceping
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val actionLogin: ActionLogin) :  ViewModel() {
+class LoginViewModel() :  ViewModel() {
     val username = MutableStateFlow("")
     val password = MutableStateFlow("")
-    fun login(context: Context) {
+    fun login() {
         viewModelScope.launch(Dispatchers.IO) {
-            actionLogin.login(context, username.value, password.value)
+            Voiceping.action.login(username = username.value, password = password.value)
         }
     }
 }

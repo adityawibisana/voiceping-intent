@@ -17,9 +17,6 @@ import com.smartwalkie.voicepingintent.ActionLogout
 import com.smartwalkie.voicepingintent.Voiceping
 import com.smartwalkie.voicepingintent.VoicepingIntentSender
 import com.smartwalkie.voicepingintent.loginusecase.ActionLogin
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import voiceping.intent.demo.receivers.SyncFinishedReceiver
 import voiceping.intent.demo.screen.ChannelScreen
 import voiceping.intent.demo.screen.LoginScreen
 import voiceping.intent.demo.screen.MainScreen
@@ -31,7 +28,6 @@ import voiceping.intent.demo.ui.theme.VoicepingIntentDemoTheme
 
 class MainActivity : ComponentActivity() {
     private val stepInstallVoiceping = StepInstallVoiceping()
-    private val syncFinishedReceiver = SyncFinishedReceiver()
     private val stepOpenVoiceping = StepOpenVoiceping()
     private lateinit var loginViewModel : LoginViewModel
 
@@ -41,9 +37,7 @@ class MainActivity : ComponentActivity() {
         Voiceping.initialize(this)
 
         val intentSender = VoicepingIntentSender()
-        loginViewModel = LoginViewModel(ActionLogin(this))
-
-        ContextCompat.registerReceiver(this, syncFinishedReceiver, syncFinishedReceiver.intentFilter, ContextCompat.RECEIVER_EXPORTED)
+        loginViewModel = LoginViewModel()
 
         setContent {
             VoicepingIntentDemoTheme {
@@ -78,7 +72,7 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onLoginClicked = { u, p ->
                                     run {
-                                        loginViewModel.login(this@MainActivity)
+                                        loginViewModel.login()
                                     }
                                 }
                             )
