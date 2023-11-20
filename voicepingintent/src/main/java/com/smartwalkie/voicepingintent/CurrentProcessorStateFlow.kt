@@ -9,12 +9,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class CurrentProcessorStateFlow(private val context: Context) {
-    val STATE_IDLE = 0
-    val STATE_RECORDING = 1
-    val STATE_PLAYING = 2
-
-    private val _state = MutableStateFlow(STATE_IDLE)
-    val state: StateFlow<Int> get() = _state
+    private val _state = MutableStateFlow<ProcessorState>(StateIdle())
+    val state: StateFlow<ProcessorState> get() = _state
     private var stateReceiver: BroadcastReceiver
 
     init {
@@ -23,16 +19,21 @@ class CurrentProcessorStateFlow(private val context: Context) {
             "android.led.ptt.yellow",
             "android.led.ptt.red"
         )
-        val playAction = "com.dfl.greenled.on"
+        val playAction = "com.media2359.voiceping.store.play"
 
         stateReceiver = object: BroadcastReceiver() {
             override fun onReceive(c: Context?, intent: Intent?) {
                 intent ?: return
 
                 when (intent.action) {
-                    idleAction -> _state.value = STATE_IDLE
-                    playAction -> _state.value = STATE_PLAYING
-                    else -> _state.value = STATE_RECORDING
+                    idleAction -> _state.value = StateIdle()
+                    playAction -> {
+                        val from = intent.getStringExtra("from") ?: return
+                        val to = intent.getStringExtra("to") ?: return
+                        val type = intent.getIntExtra("type", CurrentChannel.TYPE_UNKNOWN)
+                        _state.value = StatePlaying(from, to, type)
+                    }
+                    else -> _state.value = StateRecording()
                 }
             }
         }
@@ -48,4 +49,15 @@ class CurrentProcessorStateFlow(private val context: Context) {
     fun destroy() {
         context.unregisterReceiver(stateReceiver)
     }
+
+    companion object {
+        const val STATE_IDLE = 0
+        const val STATE_RECORDING = 1
+        const val STATE_PLAYING = 2
+    }
 }
+
+interface ProcessorState
+class StatePlaying(val from: String, val to: String, val type: Int) : ProcessorState
+class StateIdle : ProcessorState
+class StateRecording: ProcessorState

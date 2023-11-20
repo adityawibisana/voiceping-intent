@@ -11,7 +11,7 @@ object VoicepingState {
 
     @SuppressLint("StaticFieldLeak")
     private lateinit var currentProcessorStateFlow: CurrentProcessorStateFlow
-    lateinit var processor: StateFlow<Int>
+    lateinit var processor: StateFlow<ProcessorState>
 
     fun initialize(context: Context) {
         currentUsernameStateFlow = CurrentUserStateFlow(context)
