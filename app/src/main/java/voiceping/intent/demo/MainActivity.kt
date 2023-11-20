@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                                 stepOpenVoiceping = stepOpenVoiceping)
                         }
                         composable(Route.START_STOP_PTT_SCREEN) {
-                            StartStopPTTScreen(intentSender = intentSender, codeViewModel = CodeViewModel())
+                            StartStopPTTScreen(codeViewModel = CodeViewModel())
                         }
                         composable(Route.CHANNEL_SCREEN) {
                             ChannelScreen(intentSender = intentSender, codeViewModel = CodeViewModel())

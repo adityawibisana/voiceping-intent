@@ -9,21 +9,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smartwalkie.voicepingintent.Voiceping
 import kotlinx.coroutines.flow.asStateFlow
 import voiceping.intent.demo.CodeViewModel
-import com.smartwalkie.voicepingintent.VoicepingIntentSender
 import voiceping.intent.demo.view.ActionButton
 import voiceping.intent.demo.view.CodeText
 
 @Preview
 @Composable
 fun StartStopPTTScreenPreview() {
-    StartStopPTTScreen(intentSender = VoicepingIntentSender(), codeViewModel = CodeViewModel())
+    StartStopPTTScreen(codeViewModel = CodeViewModel())
 }
 
 @Composable
 fun StartStopPTTScreen(
-    intentSender: VoicepingIntentSender,
     codeViewModel: CodeViewModel,
 ) {
     val context = LocalContext.current.applicationContext
@@ -33,11 +32,11 @@ fun StartStopPTTScreen(
         CodeText(code.collectAsState().value)
         Spacer(Modifier.weight(1f))
         ActionButton(text = "Start PTT") {
-            intentSender.startPTT(context)
+            Voiceping.action.startPTT()
             codeViewModel.code.value = CodeViewModel.START_PTT_CODE.trim()
         }
         ActionButton(text = "Stop PTT") {
-            intentSender.stopPTT(context)
+            Voiceping.action.stopPTT()
             codeViewModel.code.value = CodeViewModel.STOP_PTT_CODE.trim()
         }
     }
