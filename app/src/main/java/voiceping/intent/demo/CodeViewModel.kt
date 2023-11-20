@@ -7,87 +7,41 @@ class CodeViewModel {
 
     fun getSearchChannelIntentCode(searchText: String): String {
         return """
-        fun searchChannel(context: Context, channelName: String) {
-            Intent().run {
-                setPackage("com.media2359.voiceping.store")
-                action = "android.led.ptt.select_channel"
-                putExtra("name", "$searchText")
-                putExtra("SenderPackageName", "your.apps.package.name")
-                context.sendBroadcast(this)
-            }
-        }
+            Voiceping.action.searchChannel($searchText)
         """.trimIndent()
     }
 
     fun getLoginIntentCode(username: String, password: String) : String {
         return """
-        fun login(context: Context, username: String, password: String) {
-            Intent().run {
-                setPackage("com.media2359.voiceping.store")
-                action = "login"
-                putExtra("username", "$username")
-                putExtra("password", "$password")
-                context.sendBroadcast(this)
-            }
-        }
+            Voiceping.action.login(username = $username, password = $password)
         """.trimIndent()
     }
 
     fun getLogoutIntentCode() : String {
         return """
-            fun logout(context: Context) {
-                Intent().run {
-                    setPackage("com.media2359.voiceping.store")
-                    action = "logout"
-                    context.sendBroadcast(this)
-                }
-            }
+            Voiceping.action.logout()
         """.trimIndent()
     }
 
     companion object {
         const val START_PTT_CODE = """
-            Intent().run { 
-                setPackage("com.media2359.voiceping.store")
-                action = "android.intent.action.PTT.down"
-                context.sendBroadcast(this)
-            }
+            Voiceping.action.startPTT()
         """
 
         const val STOP_PTT_CODE = """
-            Intent().run {
-                setPackage("com.media2359.voiceping.store")
-                action = "android.intent.action.PTT.up"
-                context.sendBroadcast(this)
-            }
+            Voiceping.action.stopPTT()
         """
 
         const val NEXT_CHANNEL_CODE = """
-            Intent().run {
-                setPackage("com.media2359.voiceping.store")
-                action = "android.intent.action.CHANNELDOWN.up"
-                context.sendBroadcast(this)
-            }
+            Voiceping.action.goToNextChannel()
         """
 
         const val PREV_CHANNEL_CODE = """
-            Intent().run {
-                setPackage("com.media2359.voiceping.store")
-                action = "android.intent.action.CHANNELUP.up"
-                context.sendBroadcast(this)
-            }
+            Voiceping.action.goToPrevChannel()
         """
 
-        const val RECEIVE_USER = """
-        // on your app's context:
-        val intentFilter = IntentFilter().apply {
-            addAction("com.voiceping.store.sync_finished")
-            addAction("com.voiceping.store.user")
-        }
-        context.registerReceiver(yourReceiverInstance, intentFilter)
-        
-        // on yourReceiver's class:
-        val username = intent.getStringExtra("username")
+        const val RECEIVE_USER = """            
+            Voiceping.state.user.collectAsState().value
         """
 
         const val CURRENT_CHANNEL = """
