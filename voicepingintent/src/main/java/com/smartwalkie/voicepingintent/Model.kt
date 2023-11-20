@@ -16,10 +16,7 @@ class User(username: String, fullname: String) {
     }
 }
 
-class CurrentChannel(name: String, type: Int) {
-    val name: String = ""
-    val type: Int = TYPE_UNKNOWN
-
+class CurrentChannel(val name: String, val type: Int) {
     companion object {
         const val TYPE_UNKNOWN = -1
         const val TYPE_PRIVATE = 1

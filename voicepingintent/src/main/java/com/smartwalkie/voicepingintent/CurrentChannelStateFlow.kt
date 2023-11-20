@@ -30,6 +30,10 @@ class CurrentChannelStateFlow(private val context: Context) {
         val intentFilter = IntentFilter()
         intentFilter.addAction("android.led.ptt.channel_info")
         ContextCompat.registerReceiver(context, receiver, intentFilter, ContextCompat.RECEIVER_EXPORTED)
+
+        val intent = Intent("android.intent.action.current_channel")
+        intent.`package` = "com.media2359.voiceping.store"
+        context.sendBroadcast(intent)
     }
 
     fun destroy() {

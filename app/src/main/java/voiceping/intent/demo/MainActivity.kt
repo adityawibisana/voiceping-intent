@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                             StartStopPTTScreen(codeViewModel = CodeViewModel())
                         }
                         composable(Route.CHANNEL_SCREEN) {
-                            ChannelScreen(codeViewModel = CodeViewModel())
+                            ChannelScreen(codeViewModel = CodeViewModel(), Voiceping.state.currentChannel)
                         }
                         composable(Route.LOGIN_SCREEN) {
                             LoginScreen(

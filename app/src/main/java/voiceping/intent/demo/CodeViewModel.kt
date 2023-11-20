@@ -89,5 +89,9 @@ class CodeViewModel {
         // on yourReceiver's class:
         val username = intent.getStringExtra("username")
         """
+
+        const val CURRENT_CHANNEL = """
+            Voiceping.state.currentChannel.collectAsState().value
+        """
     }
 }
