@@ -15,3 +15,14 @@ class User(username: String, fullname: String) {
         return username
     }
 }
+
+class CurrentChannel(name: String, type: Int) {
+    val name: String = ""
+    val type: Int = TYPE_UNKNOWN
+
+    companion object {
+        const val TYPE_UNKNOWN = -1
+        const val TYPE_PRIVATE = 1
+        const val TYPE_GROUP = 0
+    }
+}
