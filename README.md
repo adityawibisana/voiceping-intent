@@ -28,30 +28,30 @@ Voiceping.initialize(context = this)
 4. That's it!
 
 ## Voiceping Action and State
-`Action` is an operation that you can perform with Voiceping. `State` is the current Voiceping state. You can listen to Voiceping's state to determine whether the action you performed executed correctly.
+`Action` is an operation that you can perform with Voiceping. `State` is the current Voiceping state, and it's using modern [StateFlow](https://developer.android.com/kotlin/flow/stateflow-and-sharedflow#stateflow). You can listen to to this state to determine whether the action you performed executed correctly.
 
 ## Actions
 List of possible operations that you can perform with Voiceping. Here are the lists that you can do:
 
 ### Start PTT
 Code: `Voiceping.action.startPTT()`  
-This will start PTT on the current channel. Mic permission must be enabled on Voiceping. See `Voiceping.state.processor`, and check whether the [processor's state](https://github.com/adityawibisana/voiceping-intent/blob/main/README.md#processor) is `StateRecording` to know that this action was successful. Voiceping must be logged in first. See [Login](https://github.com/adityawibisana/voiceping-intent/blob/main/README.md#login).
+This will start PTT on the current channel. Mic permission must be enabled on Voiceping. See `Voiceping.state.processor`, and check whether the [processor's state](https://github.com/adityawibisana/voiceping-intent#processor) is `StateRecording` to know that this action was successful. Voiceping must be logged in first. See [Login](https://github.com/adityawibisana/voiceping-intent#login).
 
 ### Stop PTT
 Code: `Voiceping.action.stopPTT()`  
-This will stop PTT.  See `Voiceping.state.processor`, and check whether the [processor's state](https://github.com/adityawibisana/voiceping-intent/blob/main/README.md#processor) is `StateIdle` to know that this action was successful.
+This will stop PTT.  See `Voiceping.state.processor`, and check whether the [processor's state](https://github.com/adityawibisana/voiceping-intent#processor) is `StateIdle` to know that this action was successful.
 
 ### Search Channel
 Code: `Voiceping.action.searchChannel(channelName)`  
-This will search channel and mark that channel as the active channel. You can also search for a user by specifying `channelName` as the user's `displayname`. To check the [channel's state](https://github.com/adityawibisana/voiceping-intent/blob/main/README.md#currentchannel) use `Voiceping.state.currentChannel`.
+This will search channel and mark that channel as the active channel. You can also search for a user by specifying `channelName` as the user's `displayname`. To check the [channel's state](https://github.com/adityawibisana/voiceping-intent#currentchannel) use `Voiceping.state.currentChannel`.
 
 ### Go To Next Channel
 Code:`Voiceping.action.goToNextChannel()`  
-This will jump to the next channel. The next channel is based on the order seen in Voiceping's Favorite screen. To check the [channel's state](https://github.com/adityawibisana/voiceping-intent/blob/main/README.md#currentchannel) use `Voiceping.state.currentChannel`.
+This will jump to the next channel. The next channel is based on the order seen in Voiceping's Favorite screen. To check the [channel's state](https://github.com/adityawibisana/voiceping-intent#currentchannel) use `Voiceping.state.currentChannel`.
 
 ### Go to Previous Channel
 Code: `Voiceping.action.goToPrevChannel()`  
-This will jump to the previous channel. The previous channel is based on the order seen in Voiceping's Favorite screen. To check the [channel's state](https://github.com/adityawibisana/voiceping-intent/blob/main/README.md#currentchannel) use `Voiceping.state.currentChannel`.
+This will jump to the previous channel. The previous channel is based on the order seen in Voiceping's Favorite screen. To check the [channel's state](https://github.com/adityawibisana/voiceping-intent#currentchannel) use `Voiceping.state.currentChannel`.
 
 ### Login
 Code: `Voiceping.action.login(username, password)`  
