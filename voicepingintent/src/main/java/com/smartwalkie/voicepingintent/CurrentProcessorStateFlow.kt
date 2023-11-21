@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class CurrentProcessorStateFlow(private val context: Context) {
-    private val _state = MutableStateFlow<ProcessorState>(StateIdle())
+    private val _state = MutableStateFlow<ProcessorState>(ProcessorState.StateIdle)
     val state: StateFlow<ProcessorState> get() = _state
     private var stateReceiver: BroadcastReceiver
 
@@ -26,14 +26,19 @@ class CurrentProcessorStateFlow(private val context: Context) {
                 intent ?: return
 
                 when (intent.action) {
-                    idleAction -> _state.value = StateIdle()
+                    idleAction -> _state.value = ProcessorState.StateIdle
                     playAction -> {
                         val from = intent.getStringExtra("from") ?: return
                         val to = intent.getStringExtra("to") ?: return
                         val type = intent.getIntExtra("type", CurrentChannel.TYPE_UNKNOWN)
-                        _state.value = StatePlaying(from, to, type)
+                        _state.value = ProcessorState.StatePlaying(from, to, type)
                     }
-                    else -> _state.value = StateRecording()
+                    else -> {
+                        val from = intent.getStringExtra("from") ?: return
+                        val to = intent.getStringExtra("to") ?: return
+                        val type = intent.getIntExtra("type", CurrentChannel.TYPE_UNKNOWN)
+                        _state.value = ProcessorState.StateRecording(from, to, type)
+                    }
                 }
             }
         }
@@ -57,7 +62,8 @@ class CurrentProcessorStateFlow(private val context: Context) {
     }
 }
 
-interface ProcessorState
-class StatePlaying(val from: String, val to: String, val type: Int) : ProcessorState
-class StateIdle : ProcessorState
-class StateRecording: ProcessorState
+sealed class ProcessorState {
+    data class StatePlaying(val from: String, val to: String, val type: Int) : ProcessorState()
+    data object StateIdle : ProcessorState()
+    data class StateRecording(val from: String, val to: String, val type: Int) : ProcessorState()
+}
