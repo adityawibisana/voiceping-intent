@@ -42,7 +42,7 @@ class CurrentUserStateFlow(private val context: Context) {
         }
     }
 
-    fun destroy() {
+    internal fun destroy() {
         context.unregisterReceiver(receiver)
     }
 }

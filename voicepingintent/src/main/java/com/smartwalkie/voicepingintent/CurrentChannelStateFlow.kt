@@ -36,7 +36,7 @@ class CurrentChannelStateFlow(private val context: Context) {
         context.sendBroadcast(intent)
     }
 
-    fun destroy() {
+    internal fun destroy() {
         context.unregisterReceiver(receiver)
     }
 }

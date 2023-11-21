@@ -51,7 +51,7 @@ class CurrentProcessorStateFlow(private val context: Context) {
         ContextCompat.registerReceiver(context, stateReceiver, intentFilter, ContextCompat.RECEIVER_EXPORTED)
     }
 
-    fun destroy() {
+    internal fun destroy() {
         context.unregisterReceiver(stateReceiver)
     }
 
