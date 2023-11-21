@@ -1,12 +1,11 @@
 
-```markdown
 # Voiceping Library
 
 Library for Voiceping, available on Voiceping 3.2.0.
 
 ## Getting Started
 1. Add the [Jitpack](https://jitpack.io/#adityawibisana/voiceping-intent) repository to your `settings.gradle.kts`: 
-```css
+```
 dependencyResolutionManagement {
 		repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
 		repositories {
@@ -16,7 +15,7 @@ dependencyResolutionManagement {
 	}
 ```
 2. Add the library
-```css
+```
 dependencies {
 	implementation 'com.github.adityawibisana:voiceping-intent:0.0.4'
 }
