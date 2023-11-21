@@ -2,8 +2,9 @@ package com.smartwalkie.voicepingintent.loginusecase
 
 import com.smartwalkie.voicepingintent.Channel
 
-interface LoginResult { }
-class LoginSuccess : LoginResult {
-    var channels: List<Channel?>? = null
+sealed class LoginResult {
+    data class LoginSuccess(val channels: List<Channel?>? = null) : LoginResult()
+    data class LoginFailed(val message: String) : LoginResult()
 }
-data class LoginFailed(val message: String) : LoginResult { }
+
+

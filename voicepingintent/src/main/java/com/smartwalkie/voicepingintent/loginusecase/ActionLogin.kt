@@ -32,7 +32,7 @@ class ActionLogin(context: Context) {
         val timeout = CoroutineScope(Job()).launch(Dispatchers.IO) {
             delay(10_000)
             if (this.isActive) {
-                it.resume(LoginFailed("Timeout. Please try again."))
+                it.resume(LoginResult.LoginFailed("Timeout. Please try again."))
             }
         }
 
@@ -43,7 +43,7 @@ class ActionLogin(context: Context) {
             override fun onReceive(c: Context?, intent: Intent?) {
                 context.unregisterReceiver(syncFinishedReceiver)
                 if (intent == null) {
-                    it.resume(LoginSuccess())
+                    it.resume(LoginResult.LoginSuccess())
                     return
                 } else {
                     intent.run {
@@ -51,22 +51,20 @@ class ActionLogin(context: Context) {
                         if (channels == null) {
                             timeout.cancel()
                             channelStorage.saveChannels(null)
-                            it.resume(LoginSuccess())
+                            it.resume(LoginResult.LoginSuccess())
                             return
                         } else {
                             val itemType = object : TypeToken<List<Channel>>() {}.type
                             try {
                                 val parsed = Gson().fromJson<List<Channel>>(channels, itemType)
-                                it.resume(LoginSuccess().apply {
-                                    timeout.cancel()
-                                    channelStorage.saveChannels(parsed)
-                                    this.channels = parsed
-                                })
+                                timeout.cancel()
+                                channelStorage.saveChannels(parsed)
+                                it.resume(LoginResult.LoginSuccess(parsed))
                                 return
                             }  catch (e: Exception) {
                                 timeout.cancel()
                                 channelStorage.saveChannels(null)
-                                it.resume(LoginSuccess())
+                                it.resume(LoginResult.LoginSuccess())
                             }
                             return
                         }
