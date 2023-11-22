@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import kotlinx.coroutines.flow.StateFlow
 
-object VoicepingState {
+class VoicepingState {
     @SuppressLint("StaticFieldLeak")
     private lateinit var currentUsernameStateFlow: CurrentUserStateFlow
     lateinit var user: StateFlow<User>

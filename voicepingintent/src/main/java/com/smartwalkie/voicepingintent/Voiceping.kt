@@ -6,7 +6,7 @@ import android.content.Context
 object Voiceping {
     @SuppressLint("StaticFieldLeak")
     lateinit var action : VoicepingAction
-    val state = VoicepingState
+    val state = VoicepingState()
 
     private var isInitialized = false
 
