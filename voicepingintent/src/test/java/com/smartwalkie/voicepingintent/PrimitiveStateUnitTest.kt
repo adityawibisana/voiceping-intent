@@ -25,14 +25,14 @@ class PrimitiveStateUnitTest {
         val voicepingPrimitiveState = VoicepingPrimitiveState(voicepingState)
         var userString = voicepingPrimitiveState.getUser()
 
-        assertEquals(true, userString.contains("\"username\":\"adit\""))
-        assertEquals(true, userString.contains("\"fullname\":\"aditya\""))
+        assert(userString.contains("\"username\":\"adit\""))
+        assert(userString.contains("\"fullname\":\"aditya\""))
 
         userMutableStateFlow.value = User("wibi", "wibisana")
         userString = voicepingPrimitiveState.getUser()
 
-        assertEquals(true, userString.contains("\"username\":\"wibi\""))
-        assertEquals(true, userString.contains("\"fullname\":\"wibisana\""))
+        assert(userString.contains("\"username\":\"wibi\""))
+        assert(userString.contains("\"fullname\":\"wibisana\""))
     }
 
     @Test
