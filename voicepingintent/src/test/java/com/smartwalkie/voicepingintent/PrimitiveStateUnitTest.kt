@@ -65,4 +65,16 @@ class PrimitiveStateUnitTest {
         assert(processorString.contains("\"to\":\"doe\""))
         assert(processorString.contains("\"type\":0"))
     }
+
+    @Test
+    fun `should get the latest primitive value of the current channel`() {
+        val voicepingState = VoicepingState()
+        val currentChannelStateFlow = MutableStateFlow(CurrentChannel("aditya", 0))
+        voicepingState.currentChannel = currentChannelStateFlow
+
+        val voicepingPrimitiveState = VoicepingPrimitiveState(voicepingState)
+        val currentChannelString = voicepingPrimitiveState.getCurrentChannel()
+        assert(currentChannelString.contains("\"name\":\"aditya\""))
+        assert(currentChannelString.contains("\"type\":0"))
+    }
 }
