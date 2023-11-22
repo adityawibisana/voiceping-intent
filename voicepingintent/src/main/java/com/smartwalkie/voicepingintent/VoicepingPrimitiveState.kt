@@ -6,12 +6,14 @@ import com.google.gson.Gson
  * Useful for Flutter, because flutter only knows primitive method with primitive return type
  */
 class VoicepingPrimitiveState(private val state: VoicepingState) {
+    private val gson = Gson()
+
     fun getUser() : String {
-        return Gson().toJson(state.user.value, User::class.java)
+        return gson.toJson(state.user.value, User::class.java)
     }
 
     fun getCurrentChannel() : String {
-        return Gson().toJson(state.currentChannel.value, CurrentChannel::class.java)
+        return gson.toJson(state.currentChannel.value, CurrentChannel::class.java)
     }
 
     fun getProcessor() : String {
@@ -21,6 +23,6 @@ class VoicepingPrimitiveState(private val state: VoicepingState) {
             is ProcessorState.StatePlaying -> ProcessorState.StatePlaying::class.java
             is ProcessorState.StateRecording -> ProcessorState.StateRecording::class.java
         }
-        return Gson().toJson(stateValue, type)
+        return gson.toJson(stateValue, type)
     }
 }
