@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
                                 username = loginViewModel.username,
                                 password = loginViewModel.password,
                                 onLogoutClicked = {
-                                    ActionLogout().logout(this@MainActivity)
+                                    Voiceping.action.logout()
                                 },
                                 onLoginClicked = { u, p ->
                                     run {
