@@ -12,27 +12,12 @@ import kotlinx.coroutines.flow.asStateFlow
 class CurrentUserStateFlow(private val context: Context) {
     private val _user = MutableStateFlow(User("", ""))
     val user = _user.asStateFlow()
-
-    private var receiver: BroadcastReceiver
+    val receiver = Receiver(_user)
 
     init {
         val intentFilter = IntentFilter().apply {
             addAction("com.voiceping.store.sync_finished")
             addAction("com.voiceping.store.user")
-        }
-
-        receiver = object: BroadcastReceiver() {
-            override fun onReceive(c: Context?, intent: Intent?) {
-                intent ?: return
-
-                var username = intent.getStringExtra("username")
-                if (username == null) username = ""
-
-                var fullname = intent.getStringExtra("fullname")
-                if (fullname == null) fullname = ""
-
-                _user.value = User(username, fullname)
-            }
         }
         ContextCompat.registerReceiver(context, receiver, intentFilter, RECEIVER_EXPORTED)
         Intent().run {
@@ -44,5 +29,19 @@ class CurrentUserStateFlow(private val context: Context) {
 
     internal fun destroy() {
         context.unregisterReceiver(receiver)
+    }
+
+    class Receiver(private val _user: MutableStateFlow<User>) : BroadcastReceiver() {
+        override fun onReceive(c: Context?, intent: Intent?) {
+            intent ?: return
+
+            var username = intent.getStringExtra("username")
+            if (username == null) username = ""
+
+            var fullname = intent.getStringExtra("fullname")
+            if (fullname == null) fullname = ""
+
+            _user.value = User(username, fullname)
+        }
     }
 }
