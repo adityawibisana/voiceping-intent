@@ -19,5 +19,11 @@ class CurrentUserStateTest {
         receiver.onReceive(null, intent)
         assertEquals("adit", currentUserStateFlow.user.value.username)
         assertEquals("aditya", currentUserStateFlow.user.value.fullname)
+
+        intent.putExtra("username", "wibi")
+        intent.putExtra("fullname", "wibisana")
+        receiver.onReceive(null, intent)
+        assertEquals("wibi", currentUserStateFlow.user.value.username)
+        assertEquals("wibisana", currentUserStateFlow.user.value.fullname)
     }
 }
