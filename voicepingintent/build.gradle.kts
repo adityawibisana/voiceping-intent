@@ -5,9 +5,6 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.github.adityawibisana"
-version = "0.0.1"
-
 android {
     namespace = "com.smartwalkie.voicepingintent"
     compileSdk = 34
@@ -60,9 +57,13 @@ dependencies {
 publishing {
     publications {
         register<MavenPublication>("aar") {
-            groupId = "aditya.wibisana"
-            artifactId = "voiceping"
-            version = "0.0.5"
+            groupId = "com.github.adityawibisana"
+            artifactId = "voiceping-intent"
+            version = "0.0.6"
+
+            afterEvaluate {
+                from(components["release"])
+            }
         }
     }
 }
