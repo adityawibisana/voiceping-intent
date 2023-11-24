@@ -60,13 +60,21 @@ dependencies {
 
 publishing {
     publications {
-        register<MavenPublication>("aar") {
+        create<MavenPublication>("release") {
             groupId = jitpackGroupId
             artifactId = jitpackArtifactId
             version = jitpackVersion
 
             afterEvaluate {
                 from(components["release"])
+            }
+        }
+        create<MavenPublication>("debug") {
+            groupId = jitpackGroupId
+            artifactId = jitpackArtifactId
+            version = jitpackVersion
+
+            afterEvaluate {
                 from(components["debug"])
             }
         }
