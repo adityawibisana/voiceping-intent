@@ -63,19 +63,6 @@ publishing {
             groupId = "aditya.wibisana"
             artifactId = "voiceping"
             version = "0.0.5"
-
-            pom.withXml {
-                val dependencies = asNode().appendNode("dependencies")
-
-                val addNode = { groupId: String, artifactId: String, version: String ->
-                    val dependency = dependencies.appendNode("dependency")
-                    dependency.appendNode("groupId", groupId)
-                    dependency.appendNode("artifactId", artifactId)
-                    dependency.appendNode("version", version)
-                }
-
-                addNode("com.example", "dependency-name", "1.0")
-            }
         }
     }
 }
