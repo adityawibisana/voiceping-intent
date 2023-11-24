@@ -7,7 +7,7 @@ plugins {
 
 val jitpackGroupId = "com.github.adityawibisana"
 val jitpackArtifactId = "voiceping-intent"
-val jitpackVersion = "0.0.7"
+val jitpackVersion = "0.0.8"
 
 android {
     namespace = "com.smartwalkie.voicepingintent"
