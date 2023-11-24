@@ -7,17 +7,15 @@ object Voiceping {
     @SuppressLint("StaticFieldLeak")
     lateinit var action : VoicepingAction
     val state = VoicepingState()
-    lateinit var primitiveState: VoicepingPrimitiveState
 
     private var isInitialized = false
 
     fun initialize(context: Context) {
-        if (isInitialized) return
-        isInitialized = true
-
-        action = VoicepingAction(context.applicationContext)
-        state.initialize(context.applicationContext)
-        primitiveState = VoicepingPrimitiveState(state)
+        if (!isInitialized) {
+            action = VoicepingAction(context.applicationContext)
+            state.initialize(context.applicationContext)
+            isInitialized = true
+        }
 
         action.openVoiceping(context)
     }
