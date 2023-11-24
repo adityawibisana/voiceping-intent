@@ -5,6 +5,10 @@ plugins {
     id("maven-publish")
 }
 
+val jitpackGroupId = "com.github.adityawibisana"
+val jitpackArtifactId = "voiceping-intent"
+val jitpackVersion = "0.0.7"
+
 android {
     namespace = "com.smartwalkie.voicepingintent"
     compileSdk = 34
@@ -57,12 +61,13 @@ dependencies {
 publishing {
     publications {
         register<MavenPublication>("aar") {
-            groupId = "com.github.adityawibisana"
-            artifactId = "voiceping-intent"
-            version = "0.0.6"
+            groupId = jitpackGroupId
+            artifactId = jitpackArtifactId
+            version = jitpackVersion
 
             afterEvaluate {
                 from(components["release"])
+                from(components["debug"])
             }
         }
     }
