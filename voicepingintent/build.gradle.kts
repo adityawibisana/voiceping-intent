@@ -5,9 +5,6 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.github.adityawibisana"
-version = "0.0.1"
-
 android {
     namespace = "com.smartwalkie.voicepingintent"
     compileSdk = 34
@@ -60,21 +57,12 @@ dependencies {
 publishing {
     publications {
         register<MavenPublication>("aar") {
-            groupId = "aditya.wibisana"
-            artifactId = "voiceping"
-            version = "0.0.5"
+            groupId = "com.github.adityawibisana"
+            artifactId = "voiceping-intent"
+            version = "0.0.6"
 
-            pom.withXml {
-                val dependencies = asNode().appendNode("dependencies")
-
-                val addNode = { groupId: String, artifactId: String, version: String ->
-                    val dependency = dependencies.appendNode("dependency")
-                    dependency.appendNode("groupId", groupId)
-                    dependency.appendNode("artifactId", artifactId)
-                    dependency.appendNode("version", version)
-                }
-
-                addNode("com.example", "dependency-name", "1.0")
+            afterEvaluate {
+                from(components["release"])
             }
         }
     }
