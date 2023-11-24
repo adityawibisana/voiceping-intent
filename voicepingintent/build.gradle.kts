@@ -62,7 +62,7 @@ publishing {
         register<MavenPublication>("aar") {
             groupId = "aditya.wibisana"
             artifactId = "voiceping"
-            version = "0.0.1"
+            version = "0.0.5"
 
             pom.withXml {
                 val dependencies = asNode().appendNode("dependencies")
