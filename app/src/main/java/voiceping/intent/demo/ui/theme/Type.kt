@@ -1,6 +1,7 @@
 package voiceping.intent.demo.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -56,4 +57,12 @@ private val codeFontFamily = FontFamily(
 val codeFontStyle = TextStyle(
     fontFamily = codeFontFamily,
     fontSize = 12.sp
+)
+
+val codeFontStyleError = codeFontStyle.copy(
+    color = Color(0xFFFF0000)
+)
+
+val codeFontStyleOk = codeFontStyle.copy(
+    color = Color(0xFF4CAF50)
 )
