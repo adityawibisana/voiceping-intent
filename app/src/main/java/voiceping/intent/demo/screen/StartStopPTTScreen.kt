@@ -37,10 +37,12 @@ fun StartStopPTTScreen(
         CodeText(code.collectAsState().value)
         Spacer(Modifier.weight(1f))
 
-        val processorStateValue = when (processorState.collectAsState().value) {
+        val currentProcessorState = processorState.collectAsState().value
+
+        val processorStateValue = when (currentProcessorState) {
             is ProcessorState.StateIdle -> "-"
-            is ProcessorState.StateRecording -> "Sending message"
-            is ProcessorState.StatePlaying -> "Playing..."
+            is ProcessorState.StateRecording -> "Sending message. To:${currentProcessorState.to} Type:${if (currentProcessorState.type == 0) "group" else "private"}"
+            is ProcessorState.StatePlaying -> "Playing. From:${currentProcessorState.from} To: ${currentProcessorState.to} Type: ${if (currentProcessorState.type == 0) "Group" else "Private"}."
         }
 
         BasicTextField(value = "Status: $processorStateValue", onValueChange = {}, textStyle = codeFontStyle, readOnly = true)
