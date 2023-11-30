@@ -43,6 +43,11 @@ class CurrentHealthStateFlow(val context: Context) {
             override fun onReceive(c: Context?, intent: Intent?) {
                 intent ?: return
 
+                if (intent.action.equals("android.led.ptt.red")) {
+                    _state.value = HealthStatus.VoicepingReady
+                    return
+                }
+
                 val message = intent.getStringExtra("message")
                 if (message.isNullOrBlank()) return
 
@@ -68,6 +73,7 @@ class CurrentHealthStateFlow(val context: Context) {
         }
         val intentFilter = IntentFilter()
         intentFilter.addAction("com.voiceping.store.health")
+        intentFilter.addAction("android.led.ptt.red")
         ContextCompat.registerReceiver(context, stateReceiver, intentFilter, ContextCompat.RECEIVER_EXPORTED)
         context.sendBroadcast(Intent("com.voiceping.store.health_status"))
     }
