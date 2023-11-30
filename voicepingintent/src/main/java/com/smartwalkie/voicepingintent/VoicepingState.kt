@@ -13,6 +13,9 @@ class VoicepingState {
     private lateinit var currentChannelStateFlow: CurrentChannelStateFlow
     lateinit var currentChannel: StateFlow<CurrentChannel>
 
+    private lateinit var currentHealthStateFlow: CurrentHealthStateFlow
+    lateinit var health: StateFlow<HealthStatus>
+
     fun initialize(context: Context) {
         currentUsernameStateFlow = CurrentUserStateFlow(context)
         user = currentUsernameStateFlow.user
@@ -22,6 +25,9 @@ class VoicepingState {
 
         currentChannelStateFlow = CurrentChannelStateFlow(context)
         currentChannel = currentChannelStateFlow.channel
+
+        currentHealthStateFlow = CurrentHealthStateFlow(context)
+        health = currentHealthStateFlow.state
     }
 
     private fun destroy() {

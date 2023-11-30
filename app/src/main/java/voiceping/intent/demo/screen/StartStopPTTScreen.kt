@@ -7,9 +7,9 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smartwalkie.voicepingintent.HealthStatus
 import com.smartwalkie.voicepingintent.ProcessorState
 import com.smartwalkie.voicepingintent.Voiceping
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,8 +22,10 @@ import voiceping.intent.demo.view.CodeText
 @Preview
 @Composable
 fun StartStopPTTScreenPreview() {
-    StartStopPTTScreen(code = MutableStateFlow("The code"), processorState = MutableStateFlow(ProcessorState.StateIdle)) {
-
+    StartStopPTTScreen(
+        code = MutableStateFlow("The code"),
+        healthState = MutableStateFlow(HealthStatus.VoicepingReady),
+        processorState = MutableStateFlow(ProcessorState.StateIdle)) {
     }
 }
 
@@ -31,21 +33,31 @@ fun StartStopPTTScreenPreview() {
 fun StartStopPTTScreen(
     code : StateFlow<String>,
     processorState: StateFlow<ProcessorState>,
+    healthState: StateFlow<HealthStatus>,
     updateCode: (String) -> Unit
 ) {
     Column(modifier = Modifier.padding(12.dp)) {
         CodeText(code.collectAsState().value)
         Spacer(Modifier.weight(1f))
 
-        val currentProcessorState = processorState.collectAsState().value
-
-        val processorStateValue = when (currentProcessorState) {
+        val processorStateValue = when (val currentProcessorState = processorState.collectAsState().value) {
             is ProcessorState.StateIdle -> "-"
             is ProcessorState.StateRecording -> "Sending message. To:${currentProcessorState.to} Type:${if (currentProcessorState.type == 0) "group" else "private"}"
             is ProcessorState.StatePlaying -> "Playing. From:${currentProcessorState.from} To: ${currentProcessorState.to} Type: ${if (currentProcessorState.type == 0) "Group" else "Private"}."
         }
 
-        BasicTextField(value = "Status: $processorStateValue", onValueChange = {}, textStyle = codeFontStyle, readOnly = true)
+        val healthStateValue = when (val currentHealthStateFlow = healthState.collectAsState().value) {
+            is HealthStatus.VoicepingIsNotConnected -> currentHealthStateFlow.message
+            is HealthStatus.VoicepingIsNotInstalled -> currentHealthStateFlow.message
+            is HealthStatus.VoicepingIsNotLoggedIn -> currentHealthStateFlow.message
+            is HealthStatus.VoicepingMicPermissionIsNotGranted -> currentHealthStateFlow.message
+            is HealthStatus.VoicepingServiceIsNotRunning -> currentHealthStateFlow.message
+            HealthStatus.VoicepingReady -> "Ready"
+        }
+
+        BasicTextField(value = "Health: $healthStateValue", onValueChange = {}, textStyle = codeFontStyle, readOnly = true)
+
+        BasicTextField(value = "Processor: $processorStateValue", onValueChange = {}, textStyle = codeFontStyle, readOnly = true)
         ActionButton(text = "Start PTT") {
             Voiceping.action.startPTT()
             updateCode(CodeViewModel.START_PTT_CODE.trim())
