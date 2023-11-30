@@ -52,12 +52,14 @@ class CurrentHealthStateFlow(val context: Context) {
                 when (code) {
                     0 -> _state.value = HealthStatus.VoicepingReady
                     1 -> _state.value = HealthStatus.VoicepingIsNotLoggedIn()
-                    2 -> _state.value = HealthStatus.VoicepingMicPermissionIsNotGranted {
-                        val i = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        val uri = Uri.fromParts("package", voicepingPackageName, null)
-                        i.data = uri
-                        startActivity(context, i, null)
+                    2 -> {
+                        _state.value = HealthStatus.VoicepingMicPermissionIsNotGranted {
+                            val i = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            val uri = Uri.fromParts("package", voicepingPackageName, null)
+                            i.data = uri
+                            startActivity(context, i, null)
+                        }
                     }
                     3 -> _state.value = HealthStatus.VoicepingIsNotConnected("Voiceping is not connected to the internet.")
                     4 -> _state.value = HealthStatus.VoicepingServiceIsNotRunning()
