@@ -35,7 +35,7 @@ fun MainScreen(navController: NavController,
     val context = LocalContext.current.applicationContext
 
     Column(modifier = Modifier.padding(12.dp)) {
-        Text("Use Voiceping within your app! No additional library is required",
+        Text("Use Voiceping within your app! Use single library: https://github.com/adityawibisana/voiceping-intent",
             style = Typography.bodyLarge,
             modifier = Modifier
                 .padding(12.dp)
