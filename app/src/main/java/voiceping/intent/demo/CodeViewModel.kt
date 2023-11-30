@@ -36,6 +36,14 @@ class CodeViewModel {
             Voiceping.state.currentChannel.collectAsState().value
         """
 
+        const val CURRENT_HEALTH = """
+            Voiceping.state.health.collectAsState().value
+        """
+
+        const val CURRENT_PROCESSOR = """
+            Voiceping.state.processor.collectAsState().value
+        """
+
         fun getLoginIntentCode(username: String, password: String) : String {
             return """
             Voiceping.action.login(username = $username, password = $password)

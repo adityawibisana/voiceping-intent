@@ -3,11 +3,12 @@ package voiceping.intent.demo.screen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smartwalkie.voicepingintent.HealthStatus
@@ -68,10 +69,23 @@ fun StartStopPTTScreen(
                 "Ready"
             }
         }
+        
+        ClickableText(
+            modifier = Modifier.padding(12.dp),
+            text = buildAnnotatedString {
+                append("Health: $healthStateValue (click to get the code)") },
+            style = healthTextStyle) {
+            updateCode(CodeViewModel.CURRENT_HEALTH)
+        }
 
-        BasicTextField(value = "Health: $healthStateValue", onValueChange = {}, textStyle = healthTextStyle, readOnly = true)
+        ClickableText(
+            modifier = Modifier.padding(12.dp),
+            text = buildAnnotatedString {
+                append("Processor: $processorStateValue (click to get the code)") },
+            style = processorTextStyle) {
+            updateCode(CodeViewModel.CURRENT_PROCESSOR)
+        }
 
-        BasicTextField(value = "Processor: $processorStateValue", onValueChange = {}, textStyle = processorTextStyle, readOnly = true)
         ActionButton(text = "Start PTT") {
             Voiceping.action.startPTT()
             updateCode(CodeViewModel.START_PTT_CODE.trim())
