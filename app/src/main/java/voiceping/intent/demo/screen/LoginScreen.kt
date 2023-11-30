@@ -35,10 +35,11 @@ import voiceping.intent.demo.view.CodeText
 @Composable
 fun LoginScreenPreview()  {
     LoginScreen(
-        codeViewModel = CodeViewModel(),
+        code = MutableStateFlow("Current code"),
         currentUserStateFlow = MutableStateFlow(User("", "")),
         username = MutableStateFlow("username"),
         password = MutableStateFlow("password"),
+        updateCode = { },
         onLogoutClicked =  { },
         onLoginClicked = { _, _ -> run {} },
     )
@@ -46,26 +47,22 @@ fun LoginScreenPreview()  {
 
 @Composable
 fun LoginScreen(
-    codeViewModel: CodeViewModel,
+    code : StateFlow<String>,
     currentUserStateFlow: StateFlow<User>,
     username: MutableStateFlow<String>,
     password: MutableStateFlow<String>,
+    updateCode: (String) -> Unit,
     onLogoutClicked: () -> Unit,
     onLoginClicked: (String, String) -> Unit
 ) {
-    val code = codeViewModel.code.asStateFlow()
     val focusManager = LocalFocusManager.current
 
     Column(modifier = Modifier.padding(12.dp)) {
         CodeText(code = code.collectAsState().value)
         Spacer(modifier = Modifier.weight(1.0f))
 
-        val updateCode = {
-            codeViewModel.code.value = codeViewModel.getLoginIntentCode(username.value, password.value)
-        }
-
         TextButton(onClick = {
-            codeViewModel.code.value = CodeViewModel.RECEIVE_USER
+            updateCode(CodeViewModel.RECEIVE_USER)
         }, contentPadding = PaddingValues(0.dp)) {
             Text(text = "User: ${currentUserStateFlow.collectAsState().value.username} (click to get the code)")
         }
@@ -91,12 +88,12 @@ fun LoginScreen(
         Spacer(modifier = Modifier.padding(3.dp))
         ActionButton(text = "Login") {
             onLoginClicked.invoke(username.value, password.value)
-            updateCode()
+            updateCode(CodeViewModel.getLoginIntentCode(username.value, password.value))
         }
 
         TextButton(onClick = {
             onLogoutClicked.invoke()
-            codeViewModel.code.value = codeViewModel.getLogoutIntentCode()
+            updateCode(CodeViewModel.getLogoutIntentCode())
         }) {
             Spacer(modifier = Modifier.weight(1f))
             Text(text = "Logout",

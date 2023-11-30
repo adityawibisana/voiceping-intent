@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,7 +26,6 @@ import com.smartwalkie.voicepingintent.CurrentChannel
 import com.smartwalkie.voicepingintent.Voiceping
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import voiceping.intent.demo.CodeViewModel
 import voiceping.intent.demo.view.ActionButton
 import voiceping.intent.demo.view.CodeText
@@ -35,15 +33,18 @@ import voiceping.intent.demo.view.CodeText
 @Preview
 @Composable
 fun ChannelScreenPreview() {
-    ChannelScreen(codeViewModel = CodeViewModel(), MutableStateFlow(CurrentChannel("Testing", 0)))
+    ChannelScreen(
+        code = MutableStateFlow(""),
+        currentChannel = MutableStateFlow(CurrentChannel("name", 1))
+    ) {
+
+    }
 }
 
 @Composable
-fun ChannelScreen(codeViewModel: CodeViewModel,
-                  currentChannel: StateFlow<CurrentChannel>) {
-    val context = LocalContext.current.applicationContext
-
-    val code = codeViewModel.code.asStateFlow()
+fun ChannelScreen(code: StateFlow<String>,
+                  currentChannel: StateFlow<CurrentChannel>,
+                  updateCode : (String) -> Unit) {
     var searchResult by remember { mutableStateOf("") }
 
     val focusRequester = remember { FocusRequester() }
@@ -54,7 +55,7 @@ fun ChannelScreen(codeViewModel: CodeViewModel,
         Spacer(modifier = Modifier.weight(1.0f))
 
         TextButton(onClick = {
-            codeViewModel.code.value = CodeViewModel.CURRENT_CHANNEL
+            updateCode(CodeViewModel.CURRENT_CHANNEL)
         }, contentPadding = PaddingValues(0.dp)) {
             Text(text = "Channel: ${currentChannel.collectAsState().value.name} (click to get the code)")
         }
@@ -65,7 +66,7 @@ fun ChannelScreen(codeViewModel: CodeViewModel,
                 onValueChange = {
                     searchResult = it
                     Voiceping.action.searchChannel(it)
-                    codeViewModel.code.value = codeViewModel.getSearchChannelIntentCode(it)
+                    updateCode(CodeViewModel.getSearchChannelIntentCode(it))
                 },
                 label = { Text(text = "Search a channel") },
                 placeholder = { Text(text = "Type anything, eg: 'channel1'") },
@@ -84,11 +85,11 @@ fun ChannelScreen(codeViewModel: CodeViewModel,
 
         ActionButton(text = "Prev Channel") {
             Voiceping.action.goToPrevChannel()
-            codeViewModel.code.value = CodeViewModel.PREV_CHANNEL_CODE
+            updateCode(CodeViewModel.PREV_CHANNEL_CODE)
         }
         ActionButton(text = "Next Channel") {
             Voiceping.action.goToNextChannel()
-            codeViewModel.code.value = CodeViewModel.NEXT_CHANNEL_CODE
+            updateCode(CodeViewModel.NEXT_CHANNEL_CODE)
         }
     }
 }

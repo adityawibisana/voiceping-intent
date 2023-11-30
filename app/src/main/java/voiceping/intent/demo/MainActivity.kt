@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.smartwalkie.voicepingintent.ActionLogout
 import com.smartwalkie.voicepingintent.Voiceping
 import voiceping.intent.demo.screen.ChannelScreen
 import voiceping.intent.demo.screen.LoginScreen
@@ -26,6 +25,10 @@ class MainActivity : ComponentActivity() {
     private val stepInstallVoiceping = StepInstallVoiceping()
     private val stepOpenVoiceping = StepOpenVoiceping()
     private lateinit var loginViewModel : LoginViewModel
+
+    private val channelScreenViewModel : CodeViewModel by lazy { CodeViewModel() }
+    private val loginScreenViewModel : CodeViewModel by lazy { CodeViewModel() }
+    private val startStopPTTViewModel : CodeViewModel by lazy { CodeViewModel() }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,14 +54,18 @@ class MainActivity : ComponentActivity() {
                                 stepOpenVoiceping = stepOpenVoiceping)
                         }
                         composable(Route.START_STOP_PTT_SCREEN) {
-                            StartStopPTTScreen(codeViewModel = CodeViewModel())
+                            StartStopPTTScreen(code = startStopPTTViewModel.code) {
+                                startStopPTTViewModel.updateCode(it)
+                            }
                         }
                         composable(Route.CHANNEL_SCREEN) {
-                            ChannelScreen(codeViewModel = CodeViewModel(), Voiceping.state.currentChannel)
+                            ChannelScreen(channelScreenViewModel.code, Voiceping.state.currentChannel) {
+                                channelScreenViewModel.updateCode(it)
+                            }
                         }
                         composable(Route.LOGIN_SCREEN) {
                             LoginScreen(
-                                codeViewModel = CodeViewModel(),
+                                code = loginScreenViewModel.code,
                                 currentUserStateFlow = Voiceping.state.user,
                                 username = loginViewModel.username,
                                 password = loginViewModel.password,
@@ -69,6 +76,9 @@ class MainActivity : ComponentActivity() {
                                     run {
                                         loginViewModel.login()
                                     }
+                                },
+                                updateCode = {
+                                    loginScreenViewModel.updateCode(it)
                                 }
                             )
                         }

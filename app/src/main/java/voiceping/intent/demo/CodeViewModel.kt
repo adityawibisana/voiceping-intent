@@ -1,26 +1,14 @@
 package voiceping.intent.demo
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class CodeViewModel {
-    val code = MutableStateFlow("Press button to get all the code required to do the action.")
+    private val _code = MutableStateFlow("Press button to get all the code required to do the action.")
+    val code = _code.asStateFlow()
 
-    fun getSearchChannelIntentCode(searchText: String): String {
-        return """
-            Voiceping.action.searchChannel($searchText)
-        """.trimIndent()
-    }
-
-    fun getLoginIntentCode(username: String, password: String) : String {
-        return """
-            Voiceping.action.login(username = $username, password = $password)
-        """.trimIndent()
-    }
-
-    fun getLogoutIntentCode() : String {
-        return """
-            Voiceping.action.logout()
-        """.trimIndent()
+    fun updateCode(code: String) {
+        _code.value = code
     }
 
     companion object {
@@ -47,5 +35,23 @@ class CodeViewModel {
         const val CURRENT_CHANNEL = """
             Voiceping.state.currentChannel.collectAsState().value
         """
+
+        fun getLoginIntentCode(username: String, password: String) : String {
+            return """
+            Voiceping.action.login(username = $username, password = $password)
+        """.trimIndent()
+        }
+
+        fun getSearchChannelIntentCode(searchText: String): String {
+            return """
+            Voiceping.action.searchChannel($searchText)
+        """.trimIndent()
+        }
+
+        fun getLogoutIntentCode() : String {
+            return """
+            Voiceping.action.logout()
+        """.trimIndent()
+        }
     }
 }
