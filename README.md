@@ -3,7 +3,7 @@
 
 # Voiceping Library
 
-Library for Voiceping, available with Voiceping 3.2.0. In case 3.2.0 is not available yet on [PlayStore](https://play.google.com/store/apps/details?id=com.media2359.voiceping.store), then you can download [this](https://drive.google.com/file/d/14V_cfi2zSVOFrRaxYk_YHK9bpiPpJSDb)
+Library for Voiceping, available with Voiceping 3.2.0. In case 3.2.0 is not available yet on [PlayStore](https://play.google.com/store/apps/details?id=com.media2359.voiceping.store), then you can download [here](https://drive.google.com/file/d/1pqhHLhSrxO0xpVa4-2LEfsCbdEezEi10/view?usp=drive_link)
 
 ## Getting Started
 1. Add the [Jitpack](https://jitpack.io/#adityawibisana/voiceping-intent) repository to your `settings.gradle.kts`: 
