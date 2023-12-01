@@ -10,7 +10,6 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
-import com.smartwalkie.voicepingintent.loginusecase.LoginResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,8 +19,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlin.coroutines.resume
-
 
 class CurrentHealthStateFlow(val context: Context) {
     val voicepingPackageName = "com.media2359.voiceping.store"
@@ -47,6 +44,8 @@ class CurrentHealthStateFlow(val context: Context) {
     val state = _state.asStateFlow()
 
     private val stateReceiver: BroadcastReceiver
+
+    private val pttResponseTimer = CoroutineScope(Job())
 
     init {
         stateReceiver = object: BroadcastReceiver() {
@@ -87,12 +86,10 @@ class CurrentHealthStateFlow(val context: Context) {
         ContextCompat.registerReceiver(context, stateReceiver, intentFilter, ContextCompat.RECEIVER_EXPORTED)
         context.sendBroadcast(Intent("com.voiceping.store.health_status"))
 
-        val pttResponseTimer = CoroutineScope(Job())
         val pttReceiver = object: BroadcastReceiver() {
             override fun onReceive(c: Context?, intent: Intent?) {
                 intent ?: return
                 intent.action ?: return
-                // if no response within 5 seconds, something is wrong
                 if (intent.action.equals("android.intent.action.PTT.down")) {
                     pttResponseTimer.launch(Dispatchers.IO) {
                         delay(5000)
@@ -103,8 +100,16 @@ class CurrentHealthStateFlow(val context: Context) {
                             return@launch
                         }
                     }
+                    context.sendBroadcast(Intent("hello"))
                     return
                 }
+                if (intent.action.equals("hello_world")) {
+                    if (pttResponseTimer.isActive) {
+                        pttResponseTimer.cancel()
+                    }
+                    return
+                }
+
                 if (pttResponseTimer.isActive) {
                     pttResponseTimer.cancel()
                 }
@@ -113,14 +118,13 @@ class CurrentHealthStateFlow(val context: Context) {
                     _state.value = HealthStatus.VoicepingReady
                 }
             }
-
-
         }
         val pttIntentFilter = IntentFilter("android.intent.action.PTT.down")
         pttIntentFilter.addAction("com.dfl.greenled.off")
         pttIntentFilter.addAction("android.led.ptt.yellow")
         pttIntentFilter.addAction("android.led.ptt.red")
         pttIntentFilter.addAction("com.media2359.voiceping.store.play")
+        pttIntentFilter.addAction("hello_world")
         ContextCompat.registerReceiver(context, pttReceiver, pttIntentFilter, ContextCompat.RECEIVER_EXPORTED)
     }
 
