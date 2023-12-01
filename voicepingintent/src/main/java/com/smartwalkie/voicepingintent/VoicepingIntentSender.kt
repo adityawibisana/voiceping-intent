@@ -28,7 +28,7 @@ class VoicepingIntentSender {
      * Send PTT to the last heard message / last sent PTT
      */
     fun startPTT(context: Context) {
-        getIntent().run {
+        Intent().run {
             action = "android.intent.action.PTT.down"
             context.sendBroadcast(this)
         }

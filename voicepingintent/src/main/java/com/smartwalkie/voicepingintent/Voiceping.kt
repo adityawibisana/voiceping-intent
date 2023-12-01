@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.asLiveData
 
 object Voiceping {
     @SuppressLint("StaticFieldLeak")
@@ -35,6 +36,12 @@ object Voiceping {
                 intentFilter,
                 ContextCompat.RECEIVER_EXPORTED
             )
+
+            state.health.asLiveData().observeForever {
+                if (it is HealthStatus.VoicepingIsNotRunning) {
+                    action.openVoiceping(context)
+                }
+            }
         }
 
         action.openVoiceping(context)

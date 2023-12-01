@@ -5,12 +5,22 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
+import com.smartwalkie.voicepingintent.loginusecase.LoginResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlin.coroutines.resume
 
 
 class CurrentHealthStateFlow(val context: Context) {
@@ -76,6 +86,51 @@ class CurrentHealthStateFlow(val context: Context) {
         intentFilter.addAction("android.led.ptt.red")
         ContextCompat.registerReceiver(context, stateReceiver, intentFilter, ContextCompat.RECEIVER_EXPORTED)
         context.sendBroadcast(Intent("com.voiceping.store.health_status"))
+
+        val pttResponseTimer = CoroutineScope(Job())
+        val pttReceiver = object: BroadcastReceiver() {
+            override fun onReceive(c: Context?, intent: Intent?) {
+                intent ?: return
+                intent.action ?: return
+                // if no response within 5 seconds, something is wrong
+                if (intent.action.equals("android.intent.action.PTT.down")) {
+                    pttResponseTimer.launch(Dispatchers.IO) {
+                        delay(5000)
+                        if (isVoicepingInstalled()) {
+                            _state.value = HealthStatus.VoicepingIsNotRunning()
+                        } else {
+                            _state.value = HealthStatus.VoicepingIsNotInstalled()
+                            return@launch
+                        }
+                    }
+                    return
+                }
+                if (pttResponseTimer.isActive) {
+                    pttResponseTimer.cancel()
+                }
+                if (intent.action.equals("android.led.ptt.yellow")
+                    || intent.action.equals("android.led.ptt.red")) {
+                    _state.value = HealthStatus.VoicepingReady
+                }
+            }
+
+
+        }
+        val pttIntentFilter = IntentFilter("android.intent.action.PTT.down")
+        pttIntentFilter.addAction("com.dfl.greenled.off")
+        pttIntentFilter.addAction("android.led.ptt.yellow")
+        pttIntentFilter.addAction("android.led.ptt.red")
+        pttIntentFilter.addAction("com.media2359.voiceping.store.play")
+        ContextCompat.registerReceiver(context, pttReceiver, pttIntentFilter, ContextCompat.RECEIVER_EXPORTED)
+    }
+
+    fun isVoicepingInstalled() : Boolean {
+        return try {
+            context.packageManager.getApplicationInfo("com.media2359.voiceping.store", 0)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
     }
 }
 
@@ -89,4 +144,5 @@ sealed class HealthStatus {
     data class VoicepingMicPermissionIsNotGranted(val message: String = "Please allow 'Microphone' permission for Voiceping", val action: () -> Unit = { }) : HealthStatus()
     data class VoicepingIsNotConnected(val message: String) : HealthStatus()
     data class VoicepingServiceIsNotRunning(val message: String = "Voiceping service is not running. Please login to Voiceping first.") : HealthStatus()
+    data class VoicepingIsNotRunning(val message: String = "Voiceping is not running") : HealthStatus()
 }

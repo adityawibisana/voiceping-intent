@@ -64,6 +64,7 @@ fun StartStopPTTScreen(
             is HealthStatus.VoicepingIsNotLoggedIn -> currentHealthStateFlow.message
             is HealthStatus.VoicepingMicPermissionIsNotGranted -> currentHealthStateFlow.message
             is HealthStatus.VoicepingServiceIsNotRunning -> currentHealthStateFlow.message
+            is HealthStatus.VoicepingIsNotRunning -> currentHealthStateFlow.message
             HealthStatus.VoicepingReady -> {
                 healthTextStyle = codeFontStyleOk
                 "Ready"
