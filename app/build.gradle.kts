@@ -1,11 +1,47 @@
+import java.io.ByteArrayOutputStream
+import java.lang.ProcessBuilder.Redirect
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
 
+val getGitHash: () -> String = {
+    val process = ProcessBuilder("git", "rev-parse", "--short=1", "HEAD")
+        .redirectOutput(Redirect.PIPE)
+        .start()
+
+    val stdout = ByteArrayOutputStream()
+    process.inputStream.copyTo(stdout)
+    process.waitFor()
+
+    if (process.exitValue() == 0) {
+        stdout.toString().trim()
+    } else {
+        throw (Error("getGitHash error"))
+    }
+}
+
+val versionCode: () -> Int = {
+    val process = ProcessBuilder("git", "rev-list", "--count", "HEAD")
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .start()
+
+    val stdout = ByteArrayOutputStream()
+    process.inputStream.copyTo(stdout)
+    process.waitFor()
+
+    if (process.exitValue() == 0) {
+        stdout.toString().trim().toInt()
+    } else {
+        throw (Error("getVersionCode error"))
+    }
+}
+
 android {
     namespace = "voiceping.intent.demo"
     compileSdk = 34
+    version = versionCode
 
     defaultConfig {
         applicationId = "voiceping.intent.demo"
