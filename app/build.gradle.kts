@@ -120,3 +120,15 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
+
+tasks.named("assemble").configure {
+    doLast {
+        android.applicationVariants.all { variant ->
+            variant.outputs.all { output ->
+                val originalPath = output.outputFile.parentFile.path
+                val outputFile = File("$originalPath/${android.namespace}-${versionCode.invoke()}-${getGitHash.invoke()}.apk")
+                output.outputFile.renameTo(outputFile)
+            }
+        }
+    }
+}
