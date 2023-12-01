@@ -125,7 +125,7 @@ class VoicepingIntentSender {
     fun logout(context: Context) {
         Intent().run {
             setPackage("com.media2359.voiceping.store")
-            action = "logout"
+            action = "com.voiceping.store.logout"
             context.sendBroadcast(this)
         }
     }
