@@ -126,6 +126,29 @@ class CurrentHealthStateFlow(val context: Context) {
         pttIntentFilter.addAction("com.media2359.voiceping.store.play")
         pttIntentFilter.addAction("hello_world")
         ContextCompat.registerReceiver(context, pttReceiver, pttIntentFilter, ContextCompat.RECEIVER_EXPORTED)
+
+        val currentUserIntentFilter = IntentFilter().apply {
+            addAction("com.voiceping.store.user")
+            addAction("com.voiceping.store.sync_finished")
+        }
+        val currentUserReceiver = object : BroadcastReceiver() {
+            override fun onReceive(c: Context?, intent: Intent?) {
+                intent ?: return
+
+                var username = intent.getStringExtra("username")
+                if (username == null) username = ""
+
+                if (username.isEmpty()) {
+                    _state.value = HealthStatus.VoicepingIsNotLoggedIn()
+                } else {
+                    _state.value = HealthStatus.VoicepingReady
+                }
+            }
+
+        }
+        ContextCompat.registerReceiver(context, currentUserReceiver, currentUserIntentFilter,
+            ContextCompat.RECEIVER_EXPORTED
+        )
     }
 
     fun isVoicepingInstalled() : Boolean {
