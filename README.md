@@ -19,7 +19,7 @@ dependencyResolutionManagement {
 2. Add the library
 ```
 dependencies {
-	implementation 'com.github.adityawibisana:voiceping-intent:0.0.9'
+	implementation 'com.github.adityawibisana:voiceping-intent:0.0.10'
 }
 ```
 3. Initialize on your MainActivity / Application
