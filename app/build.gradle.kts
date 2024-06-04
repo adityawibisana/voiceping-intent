@@ -121,14 +121,57 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
 
-tasks.whenTaskAdded {
+tasks.register("rename") {
     doLast {
-        android.applicationVariants.all { variant ->
-            variant.outputs.all { output ->
-                val originalPath = output.outputFile.parentFile.path
-                val outputFile = File("$originalPath/${variant.applicationId}-${variant.buildType.name}-${versionCode.invoke()}-${getGitHash.invoke()}.apk")
-                output.outputFile.renameTo(outputFile)
-            }
+        android.applicationVariants.all {
+            val variant = this
+            variant.outputs
+                .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+                .forEach { output ->
+                    // AAB rename
+                    val originalPath = output.outputFile.parentFile.path
+                    println("originalPath:${originalPath}")
+                    val outputFile = File("$originalPath/${variant.applicationId}-${variant.buildType.name}-${versionCode()}-${getGitHash.invoke()}.apk")
+                    println("outputFile:${outputFile.absolutePath}")
+                    output.outputFile.renameTo(outputFile)
+
+                    val aabFile = File("${project.projectDir}/release/app-release.aab")
+                    if (aabFile.exists() && System.currentTimeMillis() - aabFile.lastModified() > 600_000) { // 10 minutes
+                        println("Please rebuild the aabFile, as it is created for more than 10 minutes. You might have old build that doesn't reflect your latest code.")
+                        return@forEach
+                    }
+                    try {
+                        val targetAabFile = File("${project.projectDir}/release/${variant.applicationId}-${versionCode()}-${getGitHash.invoke()}.aab")
+                        val success = aabFile.renameTo(targetAabFile)
+                        if (success) {
+                            println("Success renaming abb. Path:${targetAabFile.absolutePath}")
+                        }
+                    } catch (_: Exception) { }
+
+                    // APK rename
+                    val apkOriginalPath = output.outputFile.parentFile.path
+                    println("originalPath:${apkOriginalPath}")
+                    val apkOutputFile = File("$apkOriginalPath/${variant.applicationId}-${variant.buildType.name}-${versionCode()}-${getGitHash.invoke()}.apk")
+                    if (!apkOutputFile.exists()) {
+                        println("${apkOutputFile.absolutePath} does not exist. Skipping apk rename")
+                        return@forEach
+                    }
+                    println("outputFile:${apkOutputFile.absolutePath}")
+                    output.outputFile.renameTo(apkOutputFile)
+
+                    val apkFile = File("${project.projectDir}/app/build/outputs/apk/release/app-release.apk")
+                    if (apkFile.exists() && System.currentTimeMillis() - apkFile.lastModified() > 600_000) { // 10 minutes
+                        println("Please rebuild the apkFile, as it is created for more than 10 minutes. You might have old build that doesn't reflect your latest code.")
+                        return@forEach
+                    }
+                    try {
+                        val targetAabFile = File("${project.projectDir}/app/build/outputs/apk/release/${variant.applicationId}-${versionCode()}-${getGitHash.invoke()}.apk")
+                        val success = apkFile.renameTo(targetAabFile)
+                        if (success) {
+                            println("Success renaming apk. Path:${targetAabFile.absolutePath}")
+                        }
+                    } catch (_: Exception) { }
+                }
         }
     }
 }
