@@ -24,7 +24,7 @@ val getGitHash: () -> String = {
 
 val versionCode: () -> Int = {
     val process = ProcessBuilder("git", "rev-list", "--count", "HEAD")
-        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .redirectOutput(Redirect.PIPE)
         .start()
 
     val stdout = ByteArrayOutputStream()
