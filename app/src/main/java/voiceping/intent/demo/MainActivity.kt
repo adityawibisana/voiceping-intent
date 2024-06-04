@@ -75,7 +75,7 @@ class MainActivity : ComponentActivity() {
                                 onLogoutClicked = {
                                     Voiceping.action.logout()
                                 },
-                                onLoginClicked = { u, p ->
+                                onLoginClicked = { _, _ ->
                                     run {
                                         loginViewModel.login()
                                     }
