@@ -60,7 +60,7 @@ class VoicepingAction(private val context: Context) {
         val activityName = "com.media2359.voiceping.HeadlessActivity"
         val intent = Intent()
         intent.component = ComponentName(packageName, activityName)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         context.startActivity(intent)
     }
 }
